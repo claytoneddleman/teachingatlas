@@ -188,8 +188,8 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--rule);
-    margin: 0 -32px 32px;
     padding: 14px 32px;
+    width: 100%;
   }
   .topnav-inner {
     max-width: 1280px; margin: 0 auto;
@@ -218,19 +218,144 @@
     border-bottom-color: var(--accent);
   }
   @media (max-width: 600px) {
-    .topnav { margin: 0 -16px 24px; padding: 12px 16px; }
-    .topnav-inner { gap: 14px; font-size: 10px; }
+    .topnav { padding: 12px 16px; }
+    .topnav-inner { gap: 14px; font-size: 9px; }
     .topnav-brand { letter-spacing: 0.1em; }
-    .topnav-links { gap: 14px; }
+    .topnav-links { gap: 12px; }
+  }
+
+
+
+
+  /* ========== DARK MODE ========== */
+  html[data-theme="dark"] {
+    --ink: #e8dfd0;
+    --paper: #1a1814;
+    --paper-warm: #26221c;
+    --rule: #4a4338;
+    --accent: #d65e44;
+    --accent-deep: #b8462f;
+    --gold: #d4a854;
+    --moss: #8aa170;
+    --slate: #a89e8e;
+    --muted: #7a7164;
+    --hot: #d65e44;
+    --warm: #d4a854;
+    --cold: #8aa3b0;
+    --strong: #8aa170;
+    --desert: #d68c54;
+  }
+  html[data-theme="dark"] body { background: var(--paper); color: var(--ink); }
+  html[data-theme="dark"] .grain {
+    opacity: 0.15;
+    mix-blend-mode: screen;
+  }
+  html[data-theme="dark"] .topnav {
+    background: rgba(26, 24, 20, 0.92);
+  }
+  /* Translucent cards need solid backgrounds in dark mode */
+  html[data-theme="dark"] .zone-block.gaps { background: rgba(214, 94, 68, 0.08); }
+  html[data-theme="dark"] .zone-block.strengths { background: rgba(138, 161, 112, 0.08); }
+  html[data-theme="dark"] .matrix-row.head,
+  html[data-theme="dark"] .pcal-row.head,
+  html[data-theme="dark"] .cal-row .cal-month { color: var(--paper); }
+  html[data-theme="dark"] .matrix-row.head > div,
+  html[data-theme="dark"] .pcal-row.head > div { border-right-color: rgba(255,255,255,0.06); }
+  /* Hover states */
+  html[data-theme="dark"] .version:hover { background: var(--paper-warm); }
+  /* The grain texture is too noisy on dark; tone way down */
+  
+  /* Toggle button styling */
+  .theme-toggle {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+    font-family: 'Aeonik Pro', 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 99px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+    margin-left: 16px;
+  }
+  .theme-toggle:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .theme-toggle-icon {
+    width: 14px; height: 14px;
+    display: inline-block;
+    line-height: 1;
+  }
+  @media (max-width: 600px) {
+    .theme-toggle { margin-left: 8px; padding: 5px 8px; font-size: 10px; }
   }
 
 </style>
+  <script>
+    // Apply theme before paint to prevent flash
+    (function() {
+      try {
+        var stored = localStorage.getItem('atlas-theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        // localStorage might be unavailable (private mode, file://, etc.) — fall back to light
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  
+  // ============ THEME TOGGLE ============
+  function updateThemeButton() {
+    var theme = document.documentElement.getAttribute('data-theme');
+    var icon = document.getElementById('themeIcon');
+    var label = document.getElementById('themeLabel');
+    if (theme === 'dark') {
+      if (icon) icon.textContent = '☀';
+      if (label) label.textContent = 'Light';
+    } else {
+      if (icon) icon.textContent = '☾';
+      if (label) label.textContent = 'Dark';
+    }
+  }
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('atlas-theme', next); } catch (e) {}
+    updateThemeButton();
+    if (typeof onThemeChange === 'function') { onThemeChange(next); }
+  }
+  // Listen for system theme changes (only applies when user hasn't set a preference)
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+      if (!localStorage.getItem('atlas-theme')) {
+        var next = e.matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        updateThemeButton();
+        if (typeof onThemeChange === 'function') { onThemeChange(next); }
+      }
+    });
+  }
+  // Update button state on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateThemeButton);
+  } else {
+    updateThemeButton();
+  }
+</script>
 </head>
 <body>
 <div class="grain"></div>
 
-<div class="wrap">
-  <nav class="topnav">
+
+
+<nav class="topnav">
     <div class="topnav-inner">
       <a href="index.html" class="topnav-brand">Teaching Atlas</a>
       <div class="topnav-links">
@@ -242,8 +367,8 @@
     </div>
   </nav>
 
-
-  <div class="mast-row">
+<div class="wrap">
+<div class="mast-row">
     <span>Central Christian Church <span class="dot">●</span> Adult Services Message Planning</span>
     <span>2021-2026</span>
   </div>
