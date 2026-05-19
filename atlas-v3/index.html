@@ -571,7 +571,90 @@
     border-bottom: 1px dotted var(--accent);
   }
 
+
+  /* ========== DARK MODE ========== */
+  html[data-theme="dark"] {
+    --ink: #e8dfd0;
+    --paper: #1a1814;
+    --paper-warm: #26221c;
+    --rule: #4a4338;
+    --accent: #d65e44;
+    --accent-deep: #b8462f;
+    --gold: #d4a854;
+    --moss: #8aa170;
+    --slate: #a89e8e;
+    --muted: #7a7164;
+    --hot: #d65e44;
+    --warm: #d4a854;
+    --cold: #8aa3b0;
+    --strong: #8aa170;
+    --desert: #d68c54;
+  }
+  html[data-theme="dark"] body { background: var(--paper); color: var(--ink); }
+  html[data-theme="dark"] .grain {
+    opacity: 0.15;
+    mix-blend-mode: screen;
+  }
+  html[data-theme="dark"] .topnav {
+    background: rgba(26, 24, 20, 0.92);
+  }
+  /* Translucent cards need solid backgrounds in dark mode */
+  html[data-theme="dark"] .zone-block.gaps { background: rgba(214, 94, 68, 0.08); }
+  html[data-theme="dark"] .zone-block.strengths { background: rgba(138, 161, 112, 0.08); }
+  html[data-theme="dark"] .matrix-row.head,
+  html[data-theme="dark"] .pcal-row.head,
+  html[data-theme="dark"] .cal-row .cal-month { color: var(--paper); }
+  html[data-theme="dark"] .matrix-row.head > div,
+  html[data-theme="dark"] .pcal-row.head > div { border-right-color: rgba(255,255,255,0.06); }
+  /* Hover states */
+  html[data-theme="dark"] .version:hover { background: var(--paper-warm); }
+  /* The grain texture is too noisy on dark; tone way down */
+  
+  /* Toggle button styling */
+  .theme-toggle {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+    font-family: 'Aeonik Pro', 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 99px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+    margin-left: 16px;
+  }
+  .theme-toggle:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .theme-toggle-icon {
+    width: 14px; height: 14px;
+    display: inline-block;
+    line-height: 1;
+  }
+  @media (max-width: 600px) {
+    .theme-toggle { margin-left: 8px; padding: 5px 8px; font-size: 10px; }
+  }
+
 </style>
+  <script>
+    // Apply theme before paint to prevent flash
+    (function() {
+      try {
+        var stored = localStorage.getItem('atlas-theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        // localStorage might be unavailable (private mode, file://, etc.) — fall back to light
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
 </head>
 <body>
 <div class="grain"></div>
@@ -630,7 +713,6 @@
       <li><a href="#phoenix-calendar">The Phoenix annual calendar (and where Central stands)</a></li>
       <li><a href="#proposed">Proposed 2026-27 calendar</a></li>
       <li><a href="#recs">Ten recommendations in priority order</a></li>
-      <li><a href="#sources">Sources and methodology</a></li>
     </ol>
   </div>
 
@@ -739,82 +821,9 @@
 
     <div class="recs-list" id="recsList"></div>
   </section>
-
-  
-  <!-- ============ SOURCES ============ -->
-  <section id="sources">
-    <div class="section-eyebrow">§ 09 / Sources & Methodology</div>
-    <h2 class="section-h">What this report <em>stands on</em>.</h2>
-    <p class="section-lede">Every numbered citation in the report ties back here. Verified figures are linked to their primary source. Estimated figures are flagged explicitly. All attendance data should be read with the methodological caveats below.</p>
-
-    <h3 class="sources-h">Attendance figures</h3>
-    <ol class="sources-list">
-      <li id="src-1">
-        <strong>[1] CCV (Christ's Church of the Valley): 54,142 weekly.</strong>
-        Outreach 100, 2025 Largest Participating Churches (#3 in U.S.). Self-reported, attendance averages from February and March 2025.
-        <a href="https://outreach100.com/churches/ccv-christs-church-of-the-valley" target="_blank" rel="noopener">outreach100.com/churches/ccv-christs-church-of-the-valley</a>
-      </li>
-      <li id="src-2">
-        <strong>[2] Sun Valley Community Church: 10,034 weekly.</strong>
-        Outreach 100, 2025 Largest Participating Churches (#67 in U.S.). Self-reported, attendance averages from February and March 2025.
-        <a href="https://outreach100.com/churches/sun-valley-community-church" target="_blank" rel="noopener">outreach100.com/churches/sun-valley-community-church</a>
-      </li>
-      <li id="src-3">
-        <strong>[3] Rock Point Church: 2,605 (2017 figure).</strong>
-        Outreach 100 historical (#15 Fastest-Growing 2017). Rock Point does not appear on the 2025 Largest Churches list. Current attendance is not publicly verified.
-        <a href="https://outreach100.com/churches/rock-point-church" target="_blank" rel="noopener">outreach100.com/churches/rock-point-church</a>
-      </li>
-      <li class="sources-flag">
-        <strong>Estimated attendance figures.</strong>
-        Radiant Church, Highlands Scottsdale, Compass Christian, Cornerstone, Mission Church, and Pure Heart attendance figures are estimates compiled from Phoenix peer landscape research. Underlying sources for these specific estimates have not been independently verified. Treat these as orders-of-magnitude.
-      </li>
-    </ol>
-
-    <h3 class="sources-h">Demographic data</h3>
-    <ol class="sources-list" start="4">
-      <li id="src-4">
-        <strong>[4] Maricopa County population: 4,673,096 (July 2024).</strong>
-        U.S. Census Bureau, Vintage 2024 population estimates. 4th most-populous U.S. county.
-        <a href="https://www.census.gov/quickfacts/maricopacountyarizona" target="_blank" rel="noopener">census.gov/quickfacts/maricopacountyarizona</a>
-      </li>
-      <li id="src-5">
-        <strong>[5] Arizona religious unaffiliated: 31% (2023-24).</strong>
-        Pew Research Center, 2023-24 Religious Landscape Study. Arizona-specific data: 58% Christian (down from 67% in 2014), 31% religiously unaffiliated (up from 22% in 2007). State-level margin of error: ±5.5 percentage points. Survey conducted July 2023 to March 2024, n=36,908 nationally.
-        <a href="https://www.pewresearch.org/religious-landscape-study/state/arizona/" target="_blank" rel="noopener">pewresearch.org/religious-landscape-study/state/arizona</a>
-      </li>
-      <li id="src-6">
-        <strong>[6] Phoenix/Prescott Bible-mindedness ranking.</strong>
-        Barna Group, "Bible-Minded Cities" report, 2016. This figure is from 2016 and should be refreshed when newer metro-level data is published. Caveat retained from Phoenix peer landscape research.
-      </li>
-    </ol>
-
-    <h3 class="sources-h">Barna 2026 State of the Church</h3>
-    <ol class="sources-list" start="7">
-      <li id="src-7">
-        <strong>[7] AI as spiritual authority.</strong>
-        Barna Group, "Insights on Tech, Media and Faith in 2026," released February 2026 in partnership with Gloo as part of the 2026 State of the Church initiative. "Nearly one in three U.S. adults say spiritual advice from AI is as trustworthy as advice from a pastor. Among Gen Z and Millennials, that figure rises to two in five."
-        <a href="https://www.barna.com/research/state-of-the-church-2026-trends/" target="_blank" rel="noopener">barna.com/research/state-of-the-church-2026-trends</a>
-      </li>
-      <li id="src-8">
-        <strong>[8] Gen Z mental health as revival catalyst.</strong>
-        Barna Group, "Do Americans Think Spiritual Revival Is Coming?" March 2026, in partnership with Gloo. "42% of Gen Z cite mental health challenges as a revival catalyst, the highest rate of any generation, alongside anxiety (35%)." Survey of 1,073 U.S. adults (February 2026) and 5,003 U.S. adults (October 2025).
-        <a href="https://www.barna.com/research/do-americans-think-spiritual-revival-is-coming/" target="_blank" rel="noopener">barna.com/research/do-americans-think-spiritual-revival-is-coming</a>
-      </li>
-      <li id="src-9">
-        <strong>[9] Marriage aspirations among Gen Z and Millennials.</strong>
-        Barna Group research cited as a "persistent cultural value": 78% of Gen Z and 73% of Millennials still hope to marry. Date and specific report not independently verified at the URL level; the figure was carried from Phoenix peer landscape research benchmarks. Worth verifying directly via barna.com before external use.
-      </li>
-    </ol>
-
-    <h3 class="sources-h">Methodological caveats</h3>
-    <ul class="sources-caveats">
-      <li><strong>Outreach 100 methodology.</strong> Self-reported survey of average weekend in-person attendance for February and March of each year, supplemented by Hartford Institute for Religion Research publicly-available data. Numbers are reported by pastors, staff, or church officers, not independently audited. Recency varies. <a href="https://outreach100.com/about" target="_blank" rel="noopener">Full methodology at outreach100.com/about</a></li>
-      <li><strong>Pew Religious Landscape Study.</strong> Address-based sampling, n=36,908 U.S. adults, July 17, 2023 to March 4, 2024. National margin of error ±0.8pp. State-level margin of error ±5.5pp. Both English and Spanish.</li>
-      <li><strong>Internal audit.</strong> 262 sermons parsed from Central's teaching schedule across 5 ministry years (2021-22 through 2025-26). Tagged against a 34-topic taxonomy using keyword patterns. Tagging is intentionally generous (a single sermon can touch multiple topics).</li>
-      <li><strong>Sermon series titles for peer churches.</strong> Sourced from publicly visible church websites, sermon archives, podcast feeds, and YouTube channels as of May 2026. Dates are best approximations from archive ordering.</li>
-      <li><strong>What this report does NOT include.</strong> Attendance, salvation decisions, baptism counts, and giving-by-series are not in the dataset. Pairing this analysis with that data in a future iteration would sharpen the strategic recommendations.</li>
-    </ul>
-  </section>
+  <div style="padding: 32px 0 16px; text-align: center; border-top: 1px solid var(--rule); margin-top: 24px;">
+    <a href="../sources/" id="sources" style="font-family: 'Aeonik Pro', 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--muted); padding-bottom: 2px; transition: color 0.15s, border-color 0.15s;" onmouseover="this.style.color='var(--accent)'; this.style.borderBottomColor='var(--accent)';" onmouseout="this.style.color='var(--muted)'; this.style.borderBottomColor='var(--muted)';">Sources</a>
+  </div>
 
   <footer>
     <span>Teaching Atlas V3 · CentralAZ · May 2026</span>
@@ -837,6 +846,12 @@ const YEAR_COLORS = {
   '2024-2025': '#8c3220',
   '2025-2026': '#b8462f'
 };
+
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+
 
 // ============ DISTINCTIVES ============
 function buildDistinctives() {
@@ -867,7 +882,7 @@ function buildRadar() {
     borderColor: YEAR_COLORS[year],
     borderWidth: 1.5,
     pointBackgroundColor: YEAR_COLORS[year],
-    pointBorderColor: '#f4efe6',
+    pointBorderColor: cssVar('--paper'),
     pointBorderWidth: 1,
     pointRadius: 3,
     pointHoverRadius: 6,
@@ -882,7 +897,7 @@ function buildRadar() {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#1a1814',
+          backgroundColor: cssVar('--ink'),
           titleFont: { family: 'Aeonik Pro, Fraunces', size: 13 },
           bodyFont: { family: 'Aeonik Pro, Inter Tight', size: 12 },
           padding: 10,
@@ -895,10 +910,10 @@ function buildRadar() {
       scales: {
         r: {
           beginAtZero: true, max: 30,
-          ticks: { stepSize: 10, color: '#7a7164', font: { family: 'JetBrains Mono', size: 9 }, backdropColor: 'transparent' },
-          grid: { color: '#c8bea9' },
-          angleLines: { color: '#c8bea9' },
-          pointLabels: { color: '#1a1814', font: { family: 'Aeonik Pro, Inter Tight', size: 11, weight: '500' } }
+          ticks: { stepSize: 10, color: cssVar('--muted'), font: { family: 'JetBrains Mono', size: 9 }, backdropColor: 'transparent' },
+          grid: { color: cssVar('--rule') },
+          angleLines: { color: cssVar('--rule') },
+          pointLabels: { color: cssVar('--ink'), font: { family: 'Aeonik Pro, Inter Tight', size: 11, weight: '500' } }
         }
       }
     }
@@ -1042,6 +1057,61 @@ document.addEventListener('DOMContentLoaded', () => {
   buildProposedCalendar();
   buildRecs();
 });
+
+  // ============ THEME TOGGLE ============
+  function updateThemeButton() {
+    var theme = document.documentElement.getAttribute('data-theme');
+    var icon = document.getElementById('themeIcon');
+    var label = document.getElementById('themeLabel');
+    if (theme === 'dark') {
+      if (icon) icon.textContent = '☀';
+      if (label) label.textContent = 'Light';
+    } else {
+      if (icon) icon.textContent = '☾';
+      if (label) label.textContent = 'Dark';
+    }
+  }
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('atlas-theme', next); } catch (e) {}
+    updateThemeButton();
+    if (typeof onThemeChange === 'function') { onThemeChange(next); }
+  }
+  // Listen for system theme changes (only applies when user hasn't set a preference)
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+      if (!localStorage.getItem('atlas-theme')) {
+        var next = e.matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        updateThemeButton();
+        if (typeof onThemeChange === 'function') { onThemeChange(next); }
+      }
+    });
+  }
+  // Update button state on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateThemeButton);
+  } else {
+    updateThemeButton();
+  }
+
+  // Rebuild chart when theme changes (Chart.js doesn't read CSS vars dynamically)
+  function onThemeChange(newTheme) {
+    if (typeof radarChart !== 'undefined' && radarChart && typeof buildRadar === 'function') {
+      var prevEnabled = (typeof ENABLED_YEARS !== 'undefined') ? new Set(ENABLED_YEARS) : null;
+      radarChart.destroy();
+      buildRadar();
+      // Restore which years were toggled on before
+      if (prevEnabled && radarChart) {
+        radarChart.data.datasets.forEach(function(ds) {
+          ds.hidden = !prevEnabled.has(ds.label);
+        });
+        radarChart.update();
+      }
+    }
+  }
 </script>
 </body>
 </html>
