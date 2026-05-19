@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teaching Atlas, CentralAZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Aeonik Pro (loaded from /fonts/ at site root, falls back if not present) */
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('fonts/AeonikPro-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('fonts/AeonikPro-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('fonts/AeonikPro-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('fonts/AeonikPro-RegularItalic.woff2') format('woff2');
+    font-weight: 400; font-style: italic; font-display: swap;
+  }
+
+  :root {
+    --ink: #1a1814;
+    --paper: #f4efe6;
+    --paper-warm: #ebe3d3;
+    --rule: #c8bea9;
+    --accent: #b8462f;
+    --accent-deep: #8c3220;
+    --gold: #ad8b3a;
+    --moss: #5a6b4b;
+    --slate: #4a5160;
+    --muted: #7a7164;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Aeonik Pro', 'Inter Tight', sans-serif;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 100;
+    opacity: 0.35; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 60px 32px 100px; }
+
+  /* MASTHEAD */
+  .mast-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 24px; border-bottom: 2px solid var(--ink);
+    margin-bottom: 36px;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .mast-row .dot { color: var(--accent); }
+
+  h1 {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(64px, 11vw, 140px);
+    letter-spacing: -0.04em; line-height: 0.92;
+    margin-bottom: 24px;
+  }
+  h1 em {
+    font-style: italic; font-weight: 400; color: var(--accent);
+  }
+  .deck {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-style: italic; font-weight: 300;
+    font-size: 24px; color: var(--slate);
+    max-width: 720px; line-height: 1.4;
+    margin-bottom: 64px;
+  }
+
+  /* VERSION CARDS */
+  .versions {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .version {
+    display: grid;
+    grid-template-columns: 140px 1fr 200px;
+    align-items: center;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .version:last-child { border-bottom: none; }
+  .version:hover {
+    background: var(--paper-warm);
+    padding-left: 16px;
+  }
+  .version:hover .v-arrow { transform: translateX(8px); color: var(--accent); }
+
+  .v-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .v-label .v-num {
+    display: block;
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-size: 64px; font-weight: 300; font-style: italic;
+    color: var(--accent); line-height: 1; margin-bottom: 4px;
+    letter-spacing: -0.04em;
+  }
+
+  .v-body { padding-right: 24px; }
+  .v-title {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-size: 28px; font-weight: 600; letter-spacing: -0.02em;
+    line-height: 1.15; margin-bottom: 8px;
+  }
+  .v-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px;
+  }
+  .v-summary { font-size: 15px; color: var(--slate); line-height: 1.55; max-width: 620px; }
+
+  .v-arrow-wrap {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .v-arrow {
+    display: inline-block;
+    transition: transform 0.2s, color 0.2s;
+    font-size: 14px;
+    margin-left: 8px;
+  }
+
+  /* LATEST PILL */
+  .latest-pill {
+    display: inline-block;
+    padding: 3px 10px; margin-left: 12px;
+    background: var(--accent); color: var(--paper);
+    border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  /* FOOTER */
+  footer {
+    margin-top: 80px; padding-top: 32px;
+    border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted);
+    flex-wrap: wrap; gap: 16px;
+  }
+  footer a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--muted); }
+  footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* RESPONSIVE */
+  @media (max-width: 760px) {
+    .version { grid-template-columns: 1fr; gap: 12px; }
+    .v-arrow-wrap { text-align: left; }
+    .v-body { padding-right: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="wrap">
+  <div class="mast-row">
+    <span>Central Christian Church <span class="dot">●</span> Adult Services Message Planning</span>
+    <span>2021-2026</span>
+  </div>
+
+  <h1>Teaching <em>Atlas</em>.</h1>
+  <p class="deck">A retrospective audit and forward-looking calendar for Central's weekend teaching, built on five years of data and the Phoenix-metro peer landscape.</p>
+
+  <div class="versions">
+
+    <a href="atlas-v3/" class="version">
+      <div class="v-label">
+        <span class="v-num">V3</span>
+        Phoenix-centered
+      </div>
+      <div class="v-body">
+        <div class="v-title">Look Back, Look Around, Look Forward<span class="latest-pill">Latest</span></div>
+        <div class="v-meta">May 2026 · Phoenix peer set · 9 churches · proposed 2026-27 calendar</div>
+        <div class="v-summary">The integrated view. Combines the internal audit with Coleman's Phoenix-metro peer research and current Barna data. Includes a proposed 2026-27 teaching calendar and ten recommendations in priority order, with multi-voice teaching team as the strategic anchor.</div>
+      </div>
+      <div class="v-arrow-wrap">Open <span class="v-arrow">→</span></div>
+    </a>
+
+    <a href="atlas-v2/" class="version">
+      <div class="v-label">
+        <span class="v-num">V2</span>
+        National peer set
+      </div>
+      <div class="v-body">
+        <div class="v-title">Five Years, Fifteen Peer Churches</div>
+        <div class="v-meta">May 2026 · National peers · NCC, Watermark, Life.Church, NP</div>
+        <div class="v-summary">The first integrated audit, benchmarked against fifteen national peer churches. Introduces the topical rotation matrix and the 5-anchor annual calendar template. Superseded by V3 once Phoenix-specific peer data became available.</div>
+      </div>
+      <div class="v-arrow-wrap">Open <span class="v-arrow">→</span></div>
+    </a>
+
+    <a href="atlas-v1/" class="version">
+      <div class="v-label">
+        <span class="v-num">V1</span>
+        The retrospective
+      </div>
+      <div class="v-body">
+        <div class="v-title">Five Years. 262 Sermons. One Honest Look.</div>
+        <div class="v-meta">May 2026 · Audit-only · radar chart · hot/cold zones</div>
+        <div class="v-summary">The original retrospective audit. 262 sermons tagged across five ministry years, with a year-by-year topical radar, hot/cold zones, and scripture footprint. The foundation for everything that follows.</div>
+      </div>
+      <div class="v-arrow-wrap">Open <span class="v-arrow">→</span></div>
+    </a>
+
+  </div>
+
+  <footer>
+    <span>Teaching Atlas · CentralAZ · May 2026</span>
+    <span>For Adult Services Message Planning</span>
+  </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teaching Atlas, CentralAZ 2021-2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  /* Aeonik Pro (loaded from /fonts/ at site root). 
+     If the files aren't present, browsers silently fall back to the next font
+     in the stack (Fraunces / Inter Tight via Google Fonts). */
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-RegularItalic.woff2') format('woff2');
+    font-weight: 400; font-style: italic; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-MediumItalic.woff2') format('woff2');
+    font-weight: 500; font-style: italic; font-display: swap;
+  }
+
+  :root {
+    --ink: #1a1814;
+    --paper: #f4efe6;
+    --paper-warm: #ebe3d3;
+    --rule: #c8bea9;
+    --accent: #b8462f;       /* terracotta */
+    --accent-deep: #8c3220;
+    --gold: #ad8b3a;
+    --moss: #5a6b4b;
+    --slate: #4a5160;
+    --muted: #7a7164;
+    --hot: #b8462f;
+    --warm: #ad8b3a;
+    --cold: #6b7a85;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Aeonik Pro', 'Inter Tight', sans-serif;
+    font-weight: 400;
+    line-height: 1.55;
+    font-feature-settings: "ss01", "ss02", "cv01";
+    overflow-x: hidden;
+  }
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+
+  /* HEADER */
+  header.masthead {
+    border-bottom: 2px solid var(--ink);
+    padding: 28px 0 18px;
+    margin-bottom: 0;
+  }
+  .masthead-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .masthead-row .dot { color: var(--accent); }
+
+  h1.title {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(48px, 8vw, 104px);
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    margin: 24px 0 20px;
+    font-variation-settings: "opsz" 144;
+  }
+  h1.title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+  }
+  .deck {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--slate);
+    max-width: 760px;
+    line-height: 1.4;
+    margin-bottom: 36px;
+  }
+
+  /* TOP STAT STRIP */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 60px;
+  }
+  .stat {
+    padding: 22px 18px;
+    border-right: 1px solid var(--rule);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 44px;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-num .unit { font-size: 16px; color: var(--muted); margin-left: 2px; }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  /* SECTION */
+  section { padding: 64px 0; border-top: 1px solid var(--rule); }
+  section:first-of-type { border-top: none; padding-top: 0; }
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  h2.section-h {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(34px, 4vw, 56px);
+    letter-spacing: -0.025em;
+    line-height: 1;
+    margin-bottom: 12px;
+    font-variation-settings: "opsz" 100;
+  }
+  h2.section-h em { font-style: italic; color: var(--accent); }
+  .section-lede {
+    font-size: 17px;
+    max-width: 720px;
+    color: var(--slate);
+    margin-bottom: 40px;
+  }
+
+  /* RADAR HERO */
+  .radar-stage {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 48px;
+    align-items: start;
+  }
+  .radar-container {
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    padding: 24px;
+    position: relative;
+    aspect-ratio: 1;
+  }
+  .radar-controls {
+    display: flex; flex-direction: column; gap: 6px;
+    margin-bottom: 18px;
+  }
+  .yr-toggle {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: all 0.15s;
+  }
+  .yr-toggle:hover { border-color: var(--ink); }
+  .yr-toggle.off { opacity: 0.35; }
+  .yr-toggle .swatch {
+    width: 14px; height: 14px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .yr-toggle .yr-pct { margin-left: auto; color: var(--muted); }
+  .radar-note {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 18px;
+    line-height: 1.5;
+  }
+
+  /* HOT/COLD MATRIX */
+  .zones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--rule);
+  }
+  .zone-col {
+    border-right: 1px solid var(--rule);
+    padding: 28px 24px;
+  }
+  .zone-col:last-child { border-right: none; }
+  .zone-col.hot { background: linear-gradient(180deg, rgba(184,70,47,0.04), transparent); }
+  .zone-col.warm { background: linear-gradient(180deg, rgba(173,139,58,0.04), transparent); }
+  .zone-col.cold { background: linear-gradient(180deg, rgba(107,122,133,0.04), transparent); }
+  .zone-head {
+    display: flex; align-items: baseline; gap: 10px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px; margin-bottom: 16px;
+  }
+  .zone-temp {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 3px 8px;
+    border: 1px solid currentColor;
+    border-radius: 99px;
+  }
+  .zone-col.hot .zone-temp { color: var(--hot); }
+  .zone-col.warm .zone-temp { color: var(--warm); }
+  .zone-col.cold .zone-temp { color: var(--cold); }
+  .zone-title {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.015em;
+  }
+  .zone-range {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 18px;
+  }
+  .zone-item {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--rule);
+    align-items: baseline;
+  }
+  .zone-item:last-child { border-bottom: none; }
+  .zone-pct {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 17px;
+    text-align: right;
+    letter-spacing: -0.02em;
+  }
+  .zone-name { font-size: 14px; }
+  .zone-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* TWO COL */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+  .chart-box {
+    border: 1px solid var(--rule);
+    background: var(--paper-warm);
+    padding: 24px;
+    height: 420px;
+    position: relative;
+  }
+  .chart-title {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .chart-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .chart-canvas-wrap { position: relative; height: calc(100% - 60px); }
+
+  /* BIBLE BOOKS */
+  .books-stage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .nt-ot-bar {
+    display: flex;
+    height: 56px;
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+  .nt-bar {
+    background: linear-gradient(90deg, var(--accent), var(--accent-deep));
+    display: flex; align-items: center; padding: 0 16px;
+    color: var(--paper);
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 18px;
+  }
+  .ot-bar {
+    background: var(--moss);
+    display: flex; align-items: center; padding: 0 16px;
+    color: var(--paper);
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 18px;
+  }
+  .nt-ot-key {
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .book-list { margin-top: 8px; }
+  .book-row {
+    display: grid;
+    grid-template-columns: 24px 1fr 60px 32px;
+    gap: 8px;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .book-rank {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--muted);
+  }
+  .book-name { font-size: 14px; font-weight: 500; }
+  .book-bar-wrap {
+    height: 6px;
+    background: var(--paper-warm);
+    overflow: hidden;
+    border-radius: 3px;
+  }
+  .book-bar { height: 100%; }
+  .book-bar.nt { background: var(--accent); }
+  .book-bar.ot { background: var(--moss); }
+  .book-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-align: right;
+    color: var(--ink);
+  }
+
+  /* BENCHMARK SECTION */
+  .benchmark-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  .benchmark-table th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .benchmark-table td {
+    padding: 16px 14px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  .benchmark-table .ext {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 15px;
+    width: 24%;
+  }
+  .benchmark-table .ev { color: var(--slate); font-size: 13px; width: 38%; line-height: 1.45; }
+  .benchmark-table .cov { font-size: 13px; }
+  .verdict {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid currentColor;
+  }
+  .verdict.STRONG { color: #4a7c3a; }
+  .verdict.MODERATE { color: var(--gold); }
+  .verdict.LIGHT { color: var(--accent); }
+  .verdict.EMERGING { color: var(--slate); }
+  .verdict.GAP { color: var(--accent-deep); background: rgba(184,70,47,0.08); }
+
+  /* RECS */
+  .rec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--ink);
+    margin-top: 16px;
+  }
+  .rec {
+    padding: 32px 28px;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .rec:nth-child(2n) { border-right: none; }
+  .rec:nth-last-child(-n+2) { border-bottom: none; }
+  .rec-num {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: -0.04em;
+  }
+  .rec-title {
+    font-family: 'Aeonik Pro', 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin-bottom: 10px;
+    letter-spacing: -0.015em;
+  }
+  .rec-body { font-size: 14px; color: var(--slate); line-height: 1.55; }
+  .rec-body strong { color: var(--ink); }
+
+  /* PREACHER CHART */
+  .preacher-bar {
+    display: grid;
+    grid-template-columns: 80px 1fr 40px;
+    gap: 12px;
+    align-items: center;
+    padding: 6px 0;
+  }
+  .preacher-name { font-size: 13px; font-weight: 500; }
+  .preacher-bar-wrap { height: 8px; background: var(--paper-warm); overflow: hidden; border-radius: 4px; }
+  .preacher-bar-fill { height: 100%; background: linear-gradient(90deg, var(--slate), var(--gold)); }
+  .preacher-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-align: right; }
+
+  /* FOOTER */
+  footer {
+    border-top: 2px solid var(--ink);
+    padding: 32px 0 60px;
+    margin-top: 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    display: flex; justify-content: space-between;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .radar-stage, .two-col, .books-stage, .zones-grid, .rec-grid { grid-template-columns: 1fr; }
+    .zone-col { border-right: none; border-bottom: 1px solid var(--rule); }
+    .stat-strip { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2n) { border-right: none; }
+    .stat { border-bottom: 1px solid var(--rule); }
+    .rec { border-right: none; }
+    .rec:nth-last-child(-n+2) { border-bottom: 1px solid var(--rule); }
+    .rec:last-child { border-bottom: none; }
+  }
+
+  /* PRINT */
+  @media print {
+    .grain { display: none; }
+    body { background: white; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="masthead-row">
+      <span>Vol. 1 <span class="dot">●</span> Central Christian Church <span class="dot">●</span> Mesa Campus</span>
+      <span>2021 to 2026</span>
+    </div>
+    <h1 class="title">Teaching <em>Atlas</em>.</h1>
+    <p class="deck">Five ministry years of weekend teaching, mapped against where the American church is actually moving. What we said. What we missed. What to do about it.</p>
+  </header>
+
+  <div class="stat-strip" id="statStrip">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- ============== RADAR ============== -->
+  <section id="radar-section">
+    <div class="section-eyebrow">§ 01 / Year-by-Year Topical Radar</div>
+    <h2 class="section-h">Twelve dominant topics, <em>five rings</em>.</h2>
+    <p class="section-lede">Each ring is one ministry year. The further from center, the higher the share of that year's teaching slots given to the topic. Click any year in the legend to isolate or compare.</p>
+
+    <div class="radar-stage">
+      <div class="radar-container">
+        <canvas id="radarChart"></canvas>
+      </div>
+      <div>
+        <div class="radar-controls" id="radarControls"></div>
+        <p class="radar-note">The radar shows <em>percent of each year's sermons</em> rather than raw counts, so years of unequal length compare cleanly. Topics overlap, a sermon can touch two or three.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== HOT/COLD ============== -->
+  <section>
+    <div class="section-eyebrow">§ 02 / Hot &amp; Cold Zones</div>
+    <h2 class="section-h">What gets oxygen, <em>what doesn't</em>.</h2>
+    <p class="section-lede">Across 262 sermons, here's the heat map of which themes dominated and which got crowded out. Percentages are share of all sermons in the period.</p>
+
+    <div class="zones-grid">
+      <div class="zone-col hot">
+        <div class="zone-head"><span class="zone-temp">Hot</span><span class="zone-title">Dominant</span></div>
+        <div class="zone-range">15% or more of all sermons</div>
+        <div id="hotList"></div>
+      </div>
+      <div class="zone-col warm">
+        <div class="zone-head"><span class="zone-temp">Warm</span><span class="zone-title">Recurring</span></div>
+        <div class="zone-range">5%-15% of all sermons</div>
+        <div id="warmList"></div>
+      </div>
+      <div class="zone-col cold">
+        <div class="zone-head"><span class="zone-temp">Cold</span><span class="zone-title">Sparse</span></div>
+        <div class="zone-range">Less than 5% of all sermons</div>
+        <div id="coldList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== BIBLE BOOKS ============== -->
+  <section>
+    <div class="section-eyebrow">§ 03 / Scripture Footprint</div>
+    <h2 class="section-h">Where we open the Book <em>, and where we don't</em>.</h2>
+    <p class="section-lede">Every scripture reference in series titles, sermon titles, and message notes was extracted. The result is a clear footprint of which books we live in and which we visit only at Christmas.</p>
+
+    <div class="books-stage">
+      <div>
+        <div class="chart-title">Old vs. New Testament Weight</div>
+        <div class="chart-sub">Distinct sermons referencing a book in each testament</div>
+        <div class="nt-ot-bar" id="ntotBar"></div>
+        <div class="nt-ot-key">
+          <span id="ntKey"></span>
+          <span id="otKey"></span>
+        </div>
+        <p class="radar-note">The 87/13 split toward the New Testament tracks with non-denominational norms, but the OT thinness is one of the more actionable gaps in this report. Of 39 OT books, only <span id="otBookCount"></span> got referenced over five years.</p>
+      </div>
+      <div>
+        <div class="chart-title">Top 12 Books by Sermon Count</div>
+        <div class="chart-sub">Distinct sermons referencing each book</div>
+        <div class="book-list" id="bookList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== BENCHMARK ============== -->
+  <section>
+    <div class="section-eyebrow">§ 04 / External Benchmark</div>
+    <h2 class="section-h">What Barna &amp; Gloo say <em>people are asking</em>.</h2>
+    <p class="section-lede">Each row is a theme that current research (Barna 2025/26, Gloo State of the Church, Tithely Gen Z research, faith-and-flourishing studies) flags as resonant with the people walking into a non-denominational church in 2026. The verdict reflects how much weight we've given it.</p>
+
+    <table class="benchmark-table">
+      <thead>
+        <tr>
+          <th class="ext">External Theme</th>
+          <th class="ev">Research Evidence</th>
+          <th>Our Coverage</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody id="benchTable"></tbody>
+    </table>
+  </section>
+
+  <!-- ============== GENERATIONAL READ ============== -->
+  <section>
+    <div class="section-eyebrow">§ 05 / Generational Read</div>
+    <h2 class="section-h">Who this teaching <em>reaches first</em>.</h2>
+    <p class="section-lede">Based on the topic mix, scripture footprint, and message style, here's a likely generational read of who Central's teaching slate is most naturally pulling toward, and who needs more intentionality.</p>
+
+    <div class="two-col">
+      <div>
+        <h3 style="font-family: 'Aeonik Pro', 'Fraunces', serif; font-size: 22px; font-weight: 500; margin-bottom: 14px;">Strongest Pull</h3>
+        <p style="font-size: 15px; color: var(--slate); margin-bottom: 22px;">The current slate skews toward <strong style="color: var(--ink);">Millennial parents and Gen X</strong>. Heavy use of relationships, identity, emotional health, generosity, and discipleship maps directly to the spiritual questions a 30-55-year-old is asking, particularly someone in a family system, navigating career, and considering "is the faith I inherited still mine?"</p>
+        <h3 style="font-family: 'Aeonik Pro', 'Fraunces', serif; font-size: 22px; font-weight: 500; margin-bottom: 14px;">Resonant Strengths</h3>
+        <ul style="list-style: none; padding: 0; font-size: 14px;">
+          <li style="padding: 8px 0; border-bottom: 1px dotted var(--rule);">▸ <strong>Mental health series</strong> hits a Gen Z trigger (42% cite mental health as a revival driver)</li>
+          <li style="padding: 8px 0; border-bottom: 1px dotted var(--rule);">▸ <strong>Mission &amp; justice emphasis</strong> (Love Beyond, MOHI) aligns with Gen Z's stated hunger for tangible impact</li>
+          <li style="padding: 8px 0; border-bottom: 1px dotted var(--rule);">▸ <strong>"What's the Deal With?"</strong> apologetics arc is exactly the move Gen Z is asking for, evidence and intellectual honesty</li>
+          <li style="padding: 8px 0;">▸ <strong>Rest &amp; rhythm content</strong> speaks directly to burnout, a top-tier issue in 2025-26 Barna data</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="font-family: 'Aeonik Pro', 'Fraunces', serif; font-size: 22px; font-weight: 500; margin-bottom: 14px;">Likely Gaps</h3>
+        <p style="font-size: 15px; color: var(--slate); margin-bottom: 22px;">Several themes that current research surfaces as <strong style="color: var(--ink);">load-bearing for Gen Z and emerging adults</strong> are under-represented in the slate. None of these are absent, but the cumulative weight is light.</p>
+        <ul style="list-style: none; padding: 0; font-size: 14px;">
+          <li style="padding: 8px 0; border-bottom: 1px dotted var(--rule);">▸ <strong>Holy Spirit / experiential faith</strong> at 3.8%, Gen Z's gravitation toward embodied, ancient practice suggests room here</li>
+          <li style="padding: 8px 0; border-bottom: 1px dotted var(--rule);">▸ <strong>Prayer as practice</strong> at 3.8%, only one explicit prayer series across five years</li>
+          <li style="padding: 8px 0; border-bottom: 1px dotted var(--rule);">▸ <strong>Suffering &amp; lament</strong> at 4.2%, the spiritual openness Barna is tracking emerges from dislocation, not optimism</li>
+          <li style="padding: 8px 0; border-bottom: 1px dotted var(--rule);">▸ <strong>Old Testament narrative</strong> at 13% of book references, Gen Z is biblically under-formed and curious</li>
+          <li style="padding: 8px 0;">▸ <strong>AI &amp; technology discipleship</strong>, not yet covered; Barna 2026 flags 1 in 3 adults treating AI as pastoral advisor</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== RECOMMENDATIONS ============== -->
+  <section>
+    <div class="section-eyebrow">§ 06 / Recommendations</div>
+    <h2 class="section-h">Five moves for the <em>next ministry year</em>.</h2>
+    <p class="section-lede">If the teaching calendar were a portfolio, these are the rebalancing trades the data suggests. Each is shaped by the gap between our slate and what current research says the people in front of us are asking.</p>
+
+    <div class="rec-grid">
+      <div class="rec">
+        <div class="rec-num">01</div>
+        <div class="rec-title">Add an Old Testament narrative series each year.</div>
+        <div class="rec-body">87% of our scripture references are New Testament. The OT books we touched (Jonah, Malachi, Psalms, Nehemiah, Proverbs) all landed well, suggesting the appetite is there. <strong>A six-week walk through Genesis 1-11, Exodus, or the life of David</strong> would close the gap and serve biblically under-formed younger adults.</div>
+      </div>
+      <div class="rec">
+        <div class="rec-num">02</div>
+        <div class="rec-title">Build a standing prayer rhythm into the calendar.</div>
+        <div class="rec-body">Prayer appears in only 3.8% of sermons, mostly as a single message inside a broader series. Gen Z research consistently surfaces a hunger for <strong>ancient, embodied practice</strong>. A dedicated four-week prayer series, Lord's Prayer, lament, intercession, listening prayer, would meet a stated cultural need and shore up an obvious gap.</div>
+      </div>
+      <div class="rec">
+        <div class="rec-num">03</div>
+        <div class="rec-title">Teach suffering and lament before crisis forces it.</div>
+        <div class="rec-body">Suffering, grief, and lament show up in only 4.2% of sermons, mostly within mental-health series. Barna's data on rising spiritual openness ties directly to <strong>dislocation and loss</strong>. A standalone series on biblical lament (Psalms, Job, Lamentations) would give people categories before they need them and validate what they're already feeling.</div>
+      </div>
+      <div class="rec">
+        <div class="rec-num">04</div>
+        <div class="rec-title">Plant a "Faith &amp; Tech" thread.</div>
+        <div class="rec-body">1 in 3 US adults, 2 in 5 Gen Z and Millennials, say AI spiritual advice is as trustworthy as a pastor's. This is a discipleship issue, not just a culture-war issue. <strong>Two to four messages</strong> on digital formation, attention, AI as a spiritual companion, and what it means to be embodied in a disembodying age would put us ahead of where most non-denominational churches will land in 2027.</div>
+      </div>
+      <div class="rec">
+        <div class="rec-num">05</div>
+        <div class="rec-title">Lean further into apologetics, make it permanent.</div>
+        <div class="rec-body">"What's the Deal With?" was a strong move. The data says Gen Z is open to Jesus but cautious about organized religion and wants <strong>evidence, honesty, and room to wrestle</strong>. Make a question-driven apologetics block a fixed feature each year, perhaps spring, between Easter and summer, rather than a one-off experiment.</div>
+      </div>
+      <div class="rec">
+        <div class="rec-num">06</div>
+        <div class="rec-title">Track topical balance forward.</div>
+        <div class="rec-body">This atlas is retrospective. The same taxonomy could be applied to next year's calendar <strong>before</strong> series are locked, giving the teaching team a live dashboard of what's getting weight and what's getting starved. Pair it with attendance and decision data when you have it, and it becomes a stewardship tool, not just an audit.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== PREACHERS & SERIES ============== -->
+  <section>
+    <div class="section-eyebrow">§ 07 / Appendix</div>
+    <h2 class="section-h">Preaching <em>load &amp; series flow</em>.</h2>
+    <p class="section-lede">Two reference views: who carried the weekend pulpit during this period, and how series broke across each year.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="chart-title">Preaching Distribution</div>
+        <div class="chart-sub">Sermons preached, 2021-2026</div>
+        <div id="preacherList" style="margin-top: 20px;"></div>
+      </div>
+      <div>
+        <div class="chart-title">Series &amp; Stand-Alones</div>
+        <div class="chart-sub">Percent of sermons inside a multi-week series</div>
+        <div style="margin-top: 20px;">
+          <div style="display: flex; height: 56px; border: 1px solid var(--rule); overflow: hidden;">
+            <div id="seriesBar" style="background: linear-gradient(90deg, var(--moss), #6e8459); display: flex; align-items: center; padding: 0 16px; color: var(--paper); font-family: 'Aeonik Pro', 'Fraunces', serif; font-size: 18px; font-weight: 500;"></div>
+            <div id="standaloneBar" style="background: var(--slate); display: flex; align-items: center; padding: 0 16px; color: var(--paper); font-family: 'Aeonik Pro', 'Fraunces', serif; font-size: 18px; font-weight: 500;"></div>
+          </div>
+          <p style="font-family: 'Aeonik Pro', 'Fraunces', serif; font-style: italic; font-size: 14px; color: var(--muted); margin-top: 14px; line-height: 1.5;">The strong series-to-standalone ratio is a real strength, sustained teaching arcs are what current research says actually forms disciples (vs. one-off topical hits).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Teaching Atlas, CentralAZ Mesa, May 2026</span>
+    <span>Prepared for the teaching team &amp; senior leadership</span>
+  </footer>
+</div>
+
+<script>
+// =================== DATA EMBED ===================
+const DATA = {"meta": {"period": "2021-2026 (Five Ministry Years)", "years": ["2021-2022", "2022-2023", "2023-2024", "2024-2025", "2025-2026"], "generated": "May 2026"}, "totals": {"sermons_total": 262, "sermons_with_topic": 244, "sermons_with_scripture": 136, "years": ["2021-2022", "2022-2023", "2023-2024", "2024-2025", "2025-2026"], "unique_series": {"2021-2022": 13, "2022-2023": 9, "2023-2024": 10, "2024-2025": 14, "2025-2026": 9}, "sermons_per_year": {"2021-2022": 54, "2022-2023": 53, "2023-2024": 54, "2024-2025": 53, "2025-2026": 48}}, "top_topics_overall": [{"topic": "Faith & Trust in God", "count": 51, "pct": 19.5}, {"topic": "Salvation Heroes & Bible Narratives", "count": 43, "pct": 16.4}, {"topic": "Relationships & Community", "count": 32, "pct": 12.2}, {"topic": "Christmas & Advent", "count": 30, "pct": 11.5}, {"topic": "Mission & Evangelism", "count": 30, "pct": 11.5}, {"topic": "Gospel & Salvation", "count": 30, "pct": 11.5}, {"topic": "Discipleship & Spiritual Growth", "count": 25, "pct": 9.5}, {"topic": "Justice, Compassion & the Poor", "count": 24, "pct": 9.2}, {"topic": "Generosity & Stewardship", "count": 22, "pct": 8.4}, {"topic": "Freedom in Christ", "count": 22, "pct": 8.4}, {"topic": "Church & Body of Christ", "count": 22, "pct": 8.4}, {"topic": "Mental Health & Emotional Wellness", "count": 21, "pct": 8.0}, {"topic": "Hope, Endurance & Perseverance", "count": 20, "pct": 7.6}, {"topic": "Marriage & Family", "count": 15, "pct": 5.7}, {"topic": "Rest, Sabbath & Rhythm", "count": 13, "pct": 5.0}, {"topic": "Wisdom", "count": 13, "pct": 5.0}, {"topic": "Worship & Praise", "count": 13, "pct": 5.0}, {"topic": "Identity & Self-Worth", "count": 13, "pct": 5.0}, {"topic": "Scripture & Bible", "count": 12, "pct": 4.6}, {"topic": "Humility & Surrender", "count": 12, "pct": 4.6}, {"topic": "Suffering & Hardship", "count": 11, "pct": 4.2}, {"topic": "Leadership & Vision", "count": 10, "pct": 3.8}, {"topic": "Holy Spirit & Trinity", "count": 10, "pct": 3.8}, {"topic": "Prayer", "count": 10, "pct": 3.8}, {"topic": "Cultural Engagement & Apologetics", "count": 10, "pct": 3.8}, {"topic": "Miracles", "count": 9, "pct": 3.4}, {"topic": "Sin & Repentance", "count": 8, "pct": 3.1}, {"topic": "Serving & Calling", "count": 7, "pct": 2.7}, {"topic": "Gratitude & Contentment", "count": 5, "pct": 1.9}, {"topic": "End Times & Eternity", "count": 5, "pct": 1.9}, {"topic": "Spiritual Warfare", "count": 5, "pct": 1.9}, {"topic": "Grace & Mercy", "count": 3, "pct": 1.1}, {"topic": "Peace & Peacemaking", "count": 3, "pct": 1.1}, {"topic": "God's Nature & Character", "count": 2, "pct": 0.8}], "top_radar_topics": ["Faith & Trust in God", "Salvation Heroes & Bible Narratives", "Relationships & Community", "Christmas & Advent", "Mission & Evangelism", "Gospel & Salvation", "Discipleship & Spiritual Growth", "Justice, Compassion & the Poor", "Generosity & Stewardship", "Freedom in Christ", "Church & Body of Christ", "Mental Health & Emotional Wellness"], "radar_data": {"2021-2022": [{"topic": "Faith & Trust in God", "count": 9, "pct": 16.7}, {"topic": "Salvation Heroes & Bible Narratives", "count": 13, "pct": 24.1}, {"topic": "Relationships & Community", "count": 1, "pct": 1.9}, {"topic": "Christmas & Advent", "count": 8, "pct": 14.8}, {"topic": "Mission & Evangelism", "count": 2, "pct": 3.7}, {"topic": "Gospel & Salvation", "count": 2, "pct": 3.7}, {"topic": "Discipleship & Spiritual Growth", "count": 0, "pct": 0.0}, {"topic": "Justice, Compassion & the Poor", "count": 2, "pct": 3.7}, {"topic": "Generosity & Stewardship", "count": 6, "pct": 11.1}, {"topic": "Freedom in Christ", "count": 20, "pct": 37.0}, {"topic": "Church & Body of Christ", "count": 0, "pct": 0.0}, {"topic": "Mental Health & Emotional Wellness", "count": 5, "pct": 9.3}], "2022-2023": [{"topic": "Faith & Trust in God", "count": 18, "pct": 34.0}, {"topic": "Salvation Heroes & Bible Narratives", "count": 9, "pct": 17.0}, {"topic": "Relationships & Community", "count": 9, "pct": 17.0}, {"topic": "Christmas & Advent", "count": 4, "pct": 7.5}, {"topic": "Mission & Evangelism", "count": 1, "pct": 1.9}, {"topic": "Gospel & Salvation", "count": 1, "pct": 1.9}, {"topic": "Discipleship & Spiritual Growth", "count": 1, "pct": 1.9}, {"topic": "Justice, Compassion & the Poor", "count": 0, "pct": 0.0}, {"topic": "Generosity & Stewardship", "count": 2, "pct": 3.8}, {"topic": "Freedom in Christ", "count": 0, "pct": 0.0}, {"topic": "Church & Body of Christ", "count": 0, "pct": 0.0}, {"topic": "Mental Health & Emotional Wellness", "count": 1, "pct": 1.9}], "2023-2024": [{"topic": "Faith & Trust in God", "count": 7, "pct": 13.0}, {"topic": "Salvation Heroes & Bible Narratives", "count": 10, "pct": 18.5}, {"topic": "Relationships & Community", "count": 7, "pct": 13.0}, {"topic": "Christmas & Advent", "count": 6, "pct": 11.1}, {"topic": "Mission & Evangelism", "count": 16, "pct": 29.6}, {"topic": "Gospel & Salvation", "count": 16, "pct": 29.6}, {"topic": "Discipleship & Spiritual Growth", "count": 12, "pct": 22.2}, {"topic": "Justice, Compassion & the Poor", "count": 15, "pct": 27.8}, {"topic": "Generosity & Stewardship", "count": 1, "pct": 1.9}, {"topic": "Freedom in Christ", "count": 0, "pct": 0.0}, {"topic": "Church & Body of Christ", "count": 8, "pct": 14.8}, {"topic": "Mental Health & Emotional Wellness", "count": 3, "pct": 5.6}], "2024-2025": [{"topic": "Faith & Trust in God", "count": 10, "pct": 18.9}, {"topic": "Salvation Heroes & Bible Narratives", "count": 4, "pct": 7.5}, {"topic": "Relationships & Community", "count": 10, "pct": 18.9}, {"topic": "Christmas & Advent", "count": 6, "pct": 11.3}, {"topic": "Mission & Evangelism", "count": 0, "pct": 0.0}, {"topic": "Gospel & Salvation", "count": 1, "pct": 1.9}, {"topic": "Discipleship & Spiritual Growth", "count": 8, "pct": 15.1}, {"topic": "Justice, Compassion & the Poor", "count": 2, "pct": 3.8}, {"topic": "Generosity & Stewardship", "count": 7, "pct": 13.2}, {"topic": "Freedom in Christ", "count": 0, "pct": 0.0}, {"topic": "Church & Body of Christ", "count": 4, "pct": 7.5}, {"topic": "Mental Health & Emotional Wellness", "count": 12, "pct": 22.6}], "2025-2026": [{"topic": "Faith & Trust in God", "count": 7, "pct": 14.6}, {"topic": "Salvation Heroes & Bible Narratives", "count": 7, "pct": 14.6}, {"topic": "Relationships & Community", "count": 5, "pct": 10.4}, {"topic": "Christmas & Advent", "count": 6, "pct": 12.5}, {"topic": "Mission & Evangelism", "count": 11, "pct": 22.9}, {"topic": "Gospel & Salvation", "count": 10, "pct": 20.8}, {"topic": "Discipleship & Spiritual Growth", "count": 4, "pct": 8.3}, {"topic": "Justice, Compassion & the Poor", "count": 5, "pct": 10.4}, {"topic": "Generosity & Stewardship", "count": 6, "pct": 12.5}, {"topic": "Freedom in Christ", "count": 2, "pct": 4.2}, {"topic": "Church & Body of Christ", "count": 10, "pct": 20.8}, {"topic": "Mental Health & Emotional Wellness", "count": 0, "pct": 0.0}]}, "hot_zones": [{"topic": "Faith & Trust in God", "count": 51, "pct": 19.5}, {"topic": "Salvation Heroes & Bible Narratives", "count": 43, "pct": 16.4}], "warm_zones": [{"topic": "Relationships & Community", "count": 32, "pct": 12.2}, {"topic": "Christmas & Advent", "count": 30, "pct": 11.5}, {"topic": "Mission & Evangelism", "count": 30, "pct": 11.5}, {"topic": "Gospel & Salvation", "count": 30, "pct": 11.5}, {"topic": "Discipleship & Spiritual Growth", "count": 25, "pct": 9.5}, {"topic": "Justice, Compassion & the Poor", "count": 24, "pct": 9.2}, {"topic": "Generosity & Stewardship", "count": 22, "pct": 8.4}, {"topic": "Freedom in Christ", "count": 22, "pct": 8.4}, {"topic": "Church & Body of Christ", "count": 22, "pct": 8.4}, {"topic": "Mental Health & Emotional Wellness", "count": 21, "pct": 8.0}, {"topic": "Hope, Endurance & Perseverance", "count": 20, "pct": 7.6}, {"topic": "Marriage & Family", "count": 15, "pct": 5.7}], "cold_zones": [{"topic": "Rest, Sabbath & Rhythm", "count": 13, "pct": 5.0}, {"topic": "Wisdom", "count": 13, "pct": 5.0}, {"topic": "Worship & Praise", "count": 13, "pct": 5.0}, {"topic": "Identity & Self-Worth", "count": 13, "pct": 5.0}, {"topic": "Scripture & Bible", "count": 12, "pct": 4.6}, {"topic": "Humility & Surrender", "count": 12, "pct": 4.6}, {"topic": "Suffering & Hardship", "count": 11, "pct": 4.2}, {"topic": "Leadership & Vision", "count": 10, "pct": 3.8}, {"topic": "Holy Spirit & Trinity", "count": 10, "pct": 3.8}, {"topic": "Prayer", "count": 10, "pct": 3.8}, {"topic": "Cultural Engagement & Apologetics", "count": 10, "pct": 3.8}, {"topic": "Miracles", "count": 9, "pct": 3.4}, {"topic": "Sin & Repentance", "count": 8, "pct": 3.1}, {"topic": "Serving & Calling", "count": 7, "pct": 2.7}, {"topic": "Gratitude & Contentment", "count": 5, "pct": 1.9}, {"topic": "End Times & Eternity", "count": 5, "pct": 1.9}, {"topic": "Spiritual Warfare", "count": 5, "pct": 1.9}, {"topic": "Grace & Mercy", "count": 3, "pct": 1.1}, {"topic": "Peace & Peacemaking", "count": 3, "pct": 1.1}, {"topic": "God's Nature & Character", "count": 2, "pct": 0.8}], "never_covered": [], "book_counts": {"John": 23, "Hebrews": 22, "Matthew": 17, "Luke": 15, "Acts": 13, "James": 13, "Galatians": 12, "Psalm": 6, "Mark": 6, "Ephesians": 6, "Philippians": 5, "Jonah": 4, "Malachi": 4, "Romans": 3, "Proverbs": 3, "2 Corinthians": 3, "Colossians": 2, "Jeremiah": 1, "1 Peter": 1, "Isaiah": 1, "1 Timothy": 1, "I": 1, "Genesis": 1}, "books_by_year": {"2021-2022": {"Jonah": 4, "Galatians": 12, "Acts": 1}, "2022-2023": {"James": 13, "Psalm": 2, "Malachi": 4, "Hebrews": 20, "Acts": 1}, "2023-2024": {"Hebrews": 1, "Matthew": 12, "Acts": 10, "Luke": 5, "Mark": 3, "John": 2, "Philippians": 1, "Jeremiah": 1, "Psalm": 1, "Romans": 1}, "2024-2025": {"Psalm": 3, "Proverbs": 1, "Matthew": 1, "John": 15, "Colossians": 1, "Philippians": 4, "Mark": 2, "Luke": 1}, "2025-2026": {"Ephesians": 6, "2 Corinthians": 3, "Romans": 2, "Colossians": 1, "Matthew": 4, "Luke": 9, "Proverbs": 2, "John": 6, "1 Peter": 1, "Hebrews": 1, "Acts": 1, "Isaiah": 1, "1 Timothy": 1, "I": 1, "Genesis": 1, "Mark": 1}}, "nt_count": 142, "ot_count": 21, "nt_pct": 87.1, "top_preachers": [{"preacher": "Cal", "count": 120}, {"preacher": "Shan", "count": 62}, {"preacher": "Caleb", "count": 17}, {"preacher": "CPs", "count": 7}, {"preacher": "Rachel", "count": 5}, {"preacher": "DJ", "count": 5}, {"preacher": "Jeremy", "count": 3}, {"preacher": "Kate", "count": 3}, {"preacher": "Shane Wood", "count": 3}, {"preacher": "Lisa", "count": 2}, {"preacher": "Jon", "count": 2}, {"preacher": "Eric", "count": 2}, {"preacher": "Clayton", "count": 2}, {"preacher": "Dwight", "count": 2}, {"preacher": "Rachel Dotzler", "count": 2}], "series_by_year": {"2021-2022": [{"series": "GALATIANS: LIVE FREE", "sermon_count": 12}, {"series": "THROUGH THE VALLEY (YOU'RE NOT ALONE)", "sermon_count": 7}, {"series": "CRESCENDO: FROM SILENCE TO CELEBRATION", "sermon_count": 6}, {"series": "IN GOD WE TRUST", "sermon_count": 6}, {"series": "THE GOD WITHIN", "sermon_count": 5}, {"series": "ON THE RUN", "sermon_count": 5}, {"series": "GALATIANS: VERIFIED", "sermon_count": 3}, {"series": "GALATIANS: SET FREE", "sermon_count": 3}, {"series": "LOVE BEYOND PART 2", "sermon_count": 2}, {"series": "GALATIANS: SET FREE TO LIVE FREE", "sermon_count": 2}, {"series": "STAND ALONE", "sermon_count": 1}, {"series": "STAND ALONE- MOTHER'S DAY", "sermon_count": 1}, {"series": "STAND ALONE- SUMMIT WEEKEND", "sermon_count": 1}], "2022-2023": [{"series": "SOMETHING BETTER", "sermon_count": 11}, {"series": "SELAH", "sermon_count": 9}, {"series": "ELEVEN:ONE (every week in this series, teacher will read outloud together, Hebrews 11:1 as a reminder of what faith is)", "sermon_count": 8}, {"series": "GENUINE RELATIONSHIPS", "sermon_count": 5}, {"series": "GENUINE WISDOM", "sermon_count": 5}, {"series": "WOULD YOU BELIEVE?", "sermon_count": 5}, {"series": "MALACHI: INTERVENTION", "sermon_count": 5}, {"series": "GENUINE FAITH", "sermon_count": 3}, {"series": "STAND ALONE", "sermon_count": 2}], "2023-2024": [{"series": "LOVE BEYOND (have either a testimony or physical creative element each week to tie into each message)", "sermon_count": 11}, {"series": "STAND ALONE", "sermon_count": 9}, {"series": "JESUS MANIFESTO", "sermon_count": 9}, {"series": "ALL IN: LIFE OF ABRAHAM", "sermon_count": 6}, {"series": "CHRISTMAS AT THE MOVIES", "sermon_count": 5}, {"series": "CROSSROADS: CHOOSING THE ROAD LESS TRAVELED", "sermon_count": 4}, {"series": "THE CHOSEN", "sermon_count": 3}, {"series": "SELAH", "sermon_count": 3}, {"series": "THE LORD'S PRAYER (WE WILL SAY THE KJV LORD'S PRAYER TOGETHER EVERY WEEK)", "sermon_count": 3}, {"series": "CHRISTMAS AT CENTRAL", "sermon_count": 1}], "2024-2025": [{"series": "STAND ALONE (Stewardship/All In Update) (Use Central Generic Q1 Refresh)", "sermon_count": 7}, {"series": "FLIP THE SCRIPT [John 20:30-31] (Jesus' miracles, our personal miracles & expectation of miracles)", "sermon_count": 7}, {"series": "RELATIONSHIPS: LIFE ON THE OTHER SIDE OF YOU", "sermon_count": 6}, {"series": "THE BATTLE WITHIN: PURSUING EMOTIONAL HEALTH", "sermon_count": 6}, {"series": "JOYRIDE: SEARCHING FOR JOY", "sermon_count": 6}, {"series": "THE FIRST CHRISTMAS", "sermon_count": 5}, {"series": "I AM _______.", "sermon_count": 5}, {"series": "STAND ALONE", "sermon_count": 3}, {"series": "WHAT'S NEXT? WHAT NOW?", "sermon_count": 2}, {"series": "PSALMS", "sermon_count": 2}, {"series": "CHRISTMAS AT CENTRAL", "sermon_count": 1}, {"series": "SUMMER CHANGES EVERYTHING", "sermon_count": 1}, {"series": "TRANSITION SUNDAY CAL TO SHAN", "sermon_count": 1}, {"series": "EASTER AT CENTRAL", "sermon_count": 1}], "2025-2026": [{"series": "STAND ALONE", "sermon_count": 17}, {"series": "WHAT'S THE DEAL WITH? (what culture says vs. what God says) [Core Brand]", "sermon_count": 8}, {"series": "GRIT (ON THE BOOK OF NEHEMIAH/52 DAY CHALLENGE)", "sermon_count": 5}, {"series": "HEALTHY HUSTLE (Rest + Hard Work) {summer branding}", "sermon_count": 4}, {"series": "STAND ALONE (Summer Branding)", "sermon_count": 4}, {"series": "CHRISTMAS (ADVENT)", "sermon_count": 3}, {"series": "HANDLE WITH CARE (Core Brand)", "sermon_count": 3}, {"series": "PASSION WEEK/EASTER", "sermon_count": 3}, {"series": "SUMMER CHANGES EVERYTHING - STAND ALONE", "sermon_count": 1}]}, "benchmark_themes": [{"external_theme": "Mental Health & Anxiety as Spiritual Concern", "evidence": "Barna 2026: 42% of Gen Z cite mental health as a revival catalyst; 35% cite anxiety", "our_coverage_topic": "Mental Health & Emotional Wellness", "our_count": 21, "our_pct": 8.0, "verdict": "STRONG"}, {"external_theme": "Curiosity about Jesus (especially Gen Z/Millennial)", "evidence": "Barna 2025: 66% of US adults personally committed to Jesus, +12pts since 2021; rise led by Gen Z/Millennials", "our_coverage_topic": "Gospel & Salvation", "our_count": 30, "our_pct": 11.5, "verdict": "STRONG"}, {"external_theme": "Bible Engagement / Scripture Authority", "evidence": "Barna 2025: Millennial Bible weekly reading jumped 16 points to 50%; Gen Z rose to 49%", "our_coverage_topic": "Scripture & Bible", "our_count": 12, "our_pct": 4.6, "verdict": "MODERATE"}, {"external_theme": "Relational / Belonging / Community", "evidence": "Barna 2025/2026: Younger generations attending church specifically for relational connection, belonging, mentorship", "our_coverage_topic": "Relationships & Community", "our_count": 32, "our_pct": 12.2, "verdict": "STRONG"}, {"external_theme": "Faith vs Private/Individualized Spirituality", "evidence": "Barna 2025: 56% of US Christians say spiritual life is entirely private, correlated with weaker formation markers", "our_coverage_topic": "Discipleship & Spiritual Growth", "our_count": 25, "our_pct": 9.5, "verdict": "MODERATE"}, {"external_theme": "Mission & Justice / Serving Community", "evidence": "Tithely/Gen Z research: missional engagement and justice draw younger adults; \"passion for causes\" is a Gen Z hallmark", "our_coverage_topic": "Mission & Evangelism", "our_count": 30, "our_pct": 11.5, "verdict": "STRONG"}, {"external_theme": "Justice & Care for the Poor", "evidence": "Faith and Finance 2026: Gen Z deeply motivated by purpose, justice, tangible impact", "our_coverage_topic": "Justice, Compassion & the Poor", "our_count": 24, "our_pct": 9.2, "verdict": "STRONG"}, {"external_theme": "Apologetics / \"How do you know it's true?\"", "evidence": "Barna 2026: Gen Z is spiritually open but cautious about organized religion; wants evidence and intellectual honesty", "our_coverage_topic": "Cultural Engagement & Apologetics", "our_count": 10, "our_pct": 3.8, "verdict": "EMERGING"}, {"external_theme": "Friendship as Spiritual Practice", "evidence": "Tithely 2026: \"Friendship in the Kingdom is not just emotional support \u2014 it is discipleship\"", "our_coverage_topic": "Relationships & Community", "our_count": 32, "our_pct": 12.2, "verdict": "STRONG"}, {"external_theme": "Ancient/Embodied Practices (prayer, Sabbath, communion)", "evidence": "Tithely 2026: Gen Z drawn toward what feels rooted, historic, embodied; ancient practices feel steady", "our_coverage_topic": "Prayer", "our_count": 10, "our_pct": 3.8, "verdict": "MODERATE"}, {"external_theme": "AI & Spiritual Authority / Technology Discipleship", "evidence": "Barna 2026: 1 in 3 US adults say AI spiritual advice is as trustworthy as a pastor; 2 in 5 among Gen Z/Millennial", "our_coverage_topic": null, "our_count": 0, "our_pct": 0.0, "verdict": "GAP"}, {"external_theme": "Marriage & Family Renewal", "evidence": "Barna 2025: 78% of Gen Z and 73% of Millennials still hope to marry; \"persistent cultural value\"", "our_coverage_topic": "Marriage & Family", "our_count": 15, "our_pct": 5.7, "verdict": "LIGHT"}, {"external_theme": "Suffering, Lament, Grief Theology", "evidence": "Barna trends: spiritual openness \"emerging from dislocation\"; mental health, loss, anxiety as drivers", "our_coverage_topic": "Suffering & Hardship", "our_count": 11, "our_pct": 4.2, "verdict": "LIGHT"}, {"external_theme": "Holy Spirit & Charismatic Renewal", "evidence": "Gen Z spiritual hunger trends toward experiential/embodied faith", "our_coverage_topic": "Holy Spirit & Trinity", "our_count": 10, "our_pct": 3.8, "verdict": "LIGHT"}, {"external_theme": "Sabbath/Rest in a Burnout Culture", "evidence": "Barna 2025: Pastor + congregant burnout was the #4 most-read trend; rest a Gen Z mental-health hook", "our_coverage_topic": "Rest, Sabbath & Rhythm", "our_count": 13, "our_pct": 5.0, "verdict": "STRONG"}], "standalone_count": 46, "series_sermon_count": 216};
+
+// Year colors
+const YEAR_COLORS = {
+  '2021-2022': '#6b7a85',
+  '2022-2023': '#ad8b3a',
+  '2023-2024': '#5a6b4b',
+  '2024-2025': '#8c3220',
+  '2025-2026': '#b8462f'
+};
+
+// ==================== STAT STRIP ====================
+function buildStatStrip() {
+  const strip = document.getElementById('statStrip');
+  const totals = DATA.totals;
+  const stats = [
+    { num: totals.sermons_total, unit: '', label: 'Sermons taught' },
+    { num: '5', unit: '', label: 'Ministry years' },
+    { num: DATA.book_counts && Object.keys(DATA.book_counts).length, unit: '', label: 'Bible books cited' },
+    { num: DATA.top_topics_overall.length, unit: '', label: 'Topics tracked' },
+    { num: DATA.nt_pct, unit: '%', label: 'New Testament weight' }
+  ];
+  strip.innerHTML = stats.map(s => `
+    <div class="stat">
+      <div class="stat-num">${s.num}<span class="unit">${s.unit}</span></div>
+      <div class="stat-label">${s.label}</div>
+    </div>
+  `).join('');
+}
+
+// ==================== RADAR ====================
+let radarChart;
+const ENABLED_YEARS = new Set(DATA.totals.years);
+
+function buildRadar() {
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  const topics = DATA.top_radar_topics;
+
+  const datasets = DATA.totals.years.map(year => ({
+    label: year,
+    data: DATA.radar_data[year].map(d => d.pct),
+    fill: true,
+    backgroundColor: YEAR_COLORS[year] + '22',
+    borderColor: YEAR_COLORS[year],
+    borderWidth: 1.5,
+    pointBackgroundColor: YEAR_COLORS[year],
+    pointBorderColor: '#f4efe6',
+    pointBorderWidth: 1,
+    pointRadius: 3,
+    pointHoverRadius: 6,
+    hidden: !ENABLED_YEARS.has(year)
+  }));
+
+  // Shorten labels for radar
+  const shortLabels = topics.map(t => {
+    if (t.length > 22) {
+      const parts = t.split(' & ');
+      return parts.length > 1 ? parts[0] : t.slice(0, 22);
+    }
+    return t;
+  });
+
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: { labels: shortLabels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a1814',
+          titleFont: { family: 'Aeonik Pro, Fraunces', size: 13 },
+          bodyFont: { family: 'Aeonik Pro, Inter Tight', size: 12 },
+          padding: 10,
+          callbacks: {
+            title: (items) => items[0].dataset.label,
+            label: (item) => `${topics[item.dataIndex]}: ${item.raw}% of sermons`
+          }
+        }
+      },
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 30,
+          ticks: {
+            stepSize: 10,
+            color: '#7a7164',
+            font: { family: 'JetBrains Mono', size: 9 },
+            backdropColor: 'transparent'
+          },
+          grid: { color: '#c8bea9' },
+          angleLines: { color: '#c8bea9' },
+          pointLabels: {
+            color: '#1a1814',
+            font: { family: 'Aeonik Pro, Inter Tight', size: 11, weight: '500' }
+          }
+        }
+      }
+    }
+  });
+}
+
+function buildRadarControls() {
+  const wrap = document.getElementById('radarControls');
+  wrap.innerHTML = DATA.totals.years.map(year => {
+    const total = DATA.totals.sermons_per_year[year];
+    return `
+      <div class="yr-toggle" data-year="${year}">
+        <span class="swatch" style="background: ${YEAR_COLORS[year]}"></span>
+        <span>${year}</span>
+        <span class="yr-pct">${total} msgs</span>
+      </div>
+    `;
+  }).join('');
+
+  wrap.querySelectorAll('.yr-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const year = toggle.dataset.year;
+      if (ENABLED_YEARS.has(year)) {
+        ENABLED_YEARS.delete(year);
+        toggle.classList.add('off');
+      } else {
+        ENABLED_YEARS.add(year);
+        toggle.classList.remove('off');
+      }
+      const idx = DATA.totals.years.indexOf(year);
+      radarChart.data.datasets[idx].hidden = !ENABLED_YEARS.has(year);
+      radarChart.update();
+    });
+  });
+}
+
+// ==================== HOT/COLD ====================
+function buildZones() {
+  const renderList = (items, id) => {
+    document.getElementById(id).innerHTML = items.map(it => `
+      <div class="zone-item">
+        <div class="zone-pct">${it.pct}%</div>
+        <div>
+          <div class="zone-name">${it.topic}</div>
+          <div class="zone-count">${it.count} sermon${it.count !== 1 ? 's' : ''}</div>
+        </div>
+      </div>
+    `).join('');
+  };
+  renderList(DATA.hot_zones, 'hotList');
+  renderList(DATA.warm_zones, 'warmList');
+  renderList(DATA.cold_zones, 'coldList');
+}
+
+// ==================== BIBLE BOOKS ====================
+function buildBooks() {
+  const total = DATA.nt_count + DATA.ot_count;
+  const ntPct = DATA.nt_pct;
+  const otPct = 100 - ntPct;
+  document.getElementById('ntotBar').innerHTML = `
+    <div class="nt-bar" style="width: ${ntPct}%">NT · ${ntPct}%</div>
+    <div class="ot-bar" style="width: ${otPct}%">OT · ${otPct.toFixed(1)}%</div>
+  `;
+  document.getElementById('ntKey').textContent = `${DATA.nt_count} NT references`;
+  document.getElementById('otKey').textContent = `${DATA.ot_count} OT references`;
+
+  // Count distinct OT books
+  const NT_BOOKS = new Set(['Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','I Peter','II Peter','1 John','2 John','3 John','Jude','Revelation']);
+  const otBooks = Object.keys(DATA.book_counts).filter(b => !NT_BOOKS.has(b));
+  document.getElementById('otBookCount').textContent = otBooks.length;
+
+  // Top 12
+  const entries = Object.entries(DATA.book_counts).slice(0, 12);
+  const max = entries[0][1];
+  document.getElementById('bookList').innerHTML = entries.map(([book, count], i) => {
+    const isNt = NT_BOOKS.has(book);
+    const width = (count / max * 100).toFixed(1);
+    return `
+      <div class="book-row">
+        <span class="book-rank">${String(i+1).padStart(2, '0')}</span>
+        <div>
+          <div class="book-name">${book}</div>
+          <div class="book-bar-wrap"><div class="book-bar ${isNt ? 'nt' : 'ot'}" style="width: ${width}%"></div></div>
+        </div>
+        <span class="book-count">${count}</span>
+        <span class="book-rank" style="text-align: right;">${isNt ? 'NT' : 'OT'}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// ==================== BENCHMARK ====================
+function buildBench() {
+  document.getElementById('benchTable').innerHTML = DATA.benchmark_themes.map(b => `
+    <tr>
+      <td class="ext">${b.external_theme}</td>
+      <td class="ev">${b.evidence}</td>
+      <td class="cov">
+        ${b.our_coverage_topic ? `<strong>${b.our_coverage_topic}</strong><br><span style="color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 11px;">${b.our_count} sermons · ${b.our_pct}%</span>` : '<span style="color: var(--muted);">Not yet covered</span>'}
+      </td>
+      <td><span class="verdict ${b.verdict}">${b.verdict}</span></td>
+    </tr>
+  `).join('');
+}
+
+// ==================== PREACHERS & SERIES ====================
+function buildPreacherList() {
+  const top = DATA.top_preachers.slice(0, 10);
+  const max = top[0].count;
+  document.getElementById('preacherList').innerHTML = top.map(p => `
+    <div class="preacher-bar">
+      <div class="preacher-name">${p.preacher}</div>
+      <div class="preacher-bar-wrap"><div class="preacher-bar-fill" style="width: ${(p.count / max * 100)}%"></div></div>
+      <div class="preacher-count">${p.count}</div>
+    </div>
+  `).join('');
+}
+
+function buildSeriesSplit() {
+  const total = DATA.totals.sermons_total;
+  const seriesPct = (DATA.series_sermon_count / total * 100);
+  const standalonePct = (DATA.standalone_count / total * 100);
+  document.getElementById('seriesBar').style.width = seriesPct + '%';
+  document.getElementById('seriesBar').textContent = `Series · ${seriesPct.toFixed(0)}%`;
+  document.getElementById('standaloneBar').style.width = standalonePct + '%';
+  document.getElementById('standaloneBar').textContent = `Stand-Alone · ${standalonePct.toFixed(0)}%`;
+}
+
+// ==================== BOOT ====================
+document.addEventListener('DOMContentLoaded', () => {
+  buildStatStrip();
+  buildRadar();
+  buildRadarControls();
+  buildZones();
+  buildBooks();
+  buildBench();
+  buildPreacherList();
+  buildSeriesSplit();
+});
+</script>
+</body>
+</html>

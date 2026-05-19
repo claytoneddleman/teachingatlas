@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teaching Atlas V3, CentralAZ 2021-2026 + Phoenix Landscape</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  /* Aeonik Pro (loaded from /fonts/ at site root). 
+     If the files aren't present, browsers silently fall back to the next font
+     in the stack (Fraunces / Inter Tight via Google Fonts). */
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-RegularItalic.woff2') format('woff2');
+    font-weight: 400; font-style: italic; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aeonik Pro';
+    src: url('../fonts/AeonikPro-MediumItalic.woff2') format('woff2');
+    font-weight: 500; font-style: italic; font-display: swap;
+  }
+
+  :root {
+    --ink: #1a1814;
+    --paper: #f4efe6;
+    --paper-warm: #ebe3d3;
+    --rule: #c8bea9;
+    --accent: #b8462f;
+    --accent-deep: #8c3220;
+    --gold: #ad8b3a;
+    --moss: #5a6b4b;
+    --slate: #4a5160;
+    --muted: #7a7164;
+    --hot: #b8462f;
+    --warm: #ad8b3a;
+    --cold: #6b7a85;
+    --strong: #4a7c3a;
+    --desert: #c97f3a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Aeonik Pro', 'Inter Tight', sans-serif;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 100;
+    opacity: 0.4; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .new-pill {
+    display: inline-block; padding: 2px 8px;
+    background: var(--accent); color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    border-radius: 99px; vertical-align: middle;
+    margin-left: 6px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+  /* ===== HEADER ===== */
+  header.masthead { border-bottom: 2px solid var(--ink); padding: 28px 0 18px; }
+  .masthead-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .masthead-row .dot { color: var(--accent); }
+  .v-badge {
+    display: inline-block; padding: 3px 10px; border: 1px solid var(--accent);
+    color: var(--accent); border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase; margin-left: 8px;
+  }
+  h1.title {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(48px, 8vw, 104px);
+    letter-spacing: -0.035em; line-height: 0.95;
+    margin: 24px 0 16px;
+  }
+  h1.title em { font-style: italic; font-weight: 400; color: var(--accent); }
+  .deck {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 22px; color: var(--slate); max-width: 820px;
+    line-height: 1.4; margin-bottom: 28px;
+  }
+  .meta-strip {
+    display: flex; gap: 32px; padding: 14px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--muted); margin-bottom: 60px;
+    flex-wrap: wrap;
+  }
+  .meta-strip strong { color: var(--ink); margin-left: 4px; }
+
+  /* ===== EXEC SUMMARY ===== */
+  .exec-summary {
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    padding: 40px 44px; margin-bottom: 70px; position: relative;
+  }
+  .exec-summary::before {
+    content: 'V3';
+    position: absolute; top: 28px; right: 36px;
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-style: italic;
+    font-size: 64px; color: var(--accent); opacity: 0.22;
+    line-height: 1; letter-spacing: -0.04em;
+  }
+  .exec-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .exec-summary h2 {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 500;
+    font-size: 36px; line-height: 1.05;
+    letter-spacing: -0.02em; margin-bottom: 20px;
+    max-width: 760px;
+  }
+  .exec-summary h2 em { font-style: italic; color: var(--accent); }
+  .exec-summary p { font-size: 16px; max-width: 760px; margin-bottom: 14px; }
+  .exec-summary p strong { color: var(--ink); font-weight: 600; }
+
+  /* ===== TOC ===== */
+  .toc { margin-bottom: 40px; padding: 28px 32px; background: var(--paper-warm); border: 1px solid var(--rule); }
+  .toc-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .toc ol { list-style: none; padding: 0; counter-reset: toc; }
+  .toc li {
+    counter-increment: toc; padding: 8px 0;
+    border-bottom: 1px dotted var(--rule);
+    display: flex; align-items: baseline; gap: 12px;
+    font-size: 15px;
+  }
+  .toc li:last-child { border-bottom: none; }
+  .toc li::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 500;
+    color: var(--accent); width: 30px;
+  }
+  .toc a { color: var(--ink); text-decoration: none; flex: 1; }
+  .toc a:hover { color: var(--accent); }
+
+  /* ===== SECTIONS ===== */
+  section { padding: 64px 0; border-top: 1px solid var(--rule); }
+  section:first-of-type { border-top: none; padding-top: 0; }
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--accent); margin-bottom: 16px;
+  }
+  h2.section-h {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 500;
+    font-size: clamp(34px, 4vw, 56px);
+    letter-spacing: -0.025em; line-height: 1;
+    margin-bottom: 14px;
+  }
+  h2.section-h em { font-style: italic; color: var(--accent); }
+  .section-lede {
+    font-size: 17px; max-width: 760px;
+    color: var(--slate); margin-bottom: 40px;
+  }
+
+  /* ===== PHOENIX DISTINCTIVES ===== */
+  .distinctives-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
+  }
+  .distinctive-card {
+    background: var(--paper-warm); border: 1px solid var(--rule);
+    padding: 24px 26px; position: relative;
+    border-left: 4px solid var(--desert);
+  }
+  .distinctive-card.cv { border-left-color: var(--accent); }
+  .distinctive-card h3 {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 600;
+    font-size: 19px; margin-bottom: 8px;
+    letter-spacing: -0.015em;
+  }
+  .distinctive-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--muted);
+    margin-bottom: 10px; line-height: 1.5;
+  }
+  .distinctive-implication { font-size: 14px; color: var(--slate); line-height: 1.55; }
+  .distinctive-implication strong { color: var(--ink); }
+
+  /* ===== RADAR ===== */
+  .radar-stage {
+    display: grid; grid-template-columns: 1fr 320px;
+    gap: 48px; align-items: start;
+  }
+  .radar-container {
+    background: var(--paper-warm); border: 1px solid var(--rule);
+    padding: 24px; aspect-ratio: 1;
+  }
+  .radar-controls { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .yr-toggle {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; border: 1px solid var(--rule);
+    background: var(--paper); cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; transition: all 0.15s;
+  }
+  .yr-toggle:hover { border-color: var(--ink); }
+  .yr-toggle.off { opacity: 0.35; }
+  .yr-toggle .swatch { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+  .yr-toggle .yr-pct { margin-left: auto; color: var(--muted); }
+  .radar-note {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-style: italic;
+    font-size: 14px; color: var(--muted); margin-top: 18px;
+    line-height: 1.5;
+  }
+
+  /* ===== ROTATION MATRIX (compact) ===== */
+  .matrix-wrap { border: 1px solid var(--ink); background: var(--paper); }
+  .matrix-row {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 3fr 1.2fr;
+    border-bottom: 1px solid var(--rule);
+    align-items: stretch;
+  }
+  .matrix-row:last-child { border-bottom: none; }
+  .matrix-row.head {
+    background: var(--ink); color: var(--paper);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .matrix-row.head > div { padding: 14px 16px; border-right: 1px solid rgba(255,255,255,0.12); }
+  .matrix-row.head > div:last-child { border-right: none; }
+  .matrix-row > div { padding: 16px; border-right: 1px solid var(--rule); display: flex; align-items: center; }
+  .matrix-row > div:last-child { border-right: none; }
+  .mat-cat { font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 600; font-size: 15px; }
+  .mat-pct { font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 500; font-size: 22px; letter-spacing: -0.02em; }
+  .mat-bar-wrap { width: 100%; }
+  .mat-bar-track { height: 8px; background: var(--paper-warm); overflow: hidden; border-radius: 4px; }
+  .mat-bar-fill { height: 100%; }
+  .mat-bar-fill.STRONG { background: var(--strong); }
+  .mat-bar-fill.MODERATE { background: var(--gold); }
+  .mat-bar-fill.LIGHT { background: var(--accent); }
+  .mat-bar-fill.GAP { background: var(--accent-deep); }
+  .mat-peer { font-size: 12px; color: var(--slate); line-height: 1.45; }
+  .mat-verdict { display: flex; flex-direction: column; gap: 6px; }
+  .mat-verdict-pill {
+    display: inline-block; padding: 3px 10px; border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    border: 1px solid currentColor; align-self: flex-start;
+  }
+  .mat-verdict-pill.STRONG { color: var(--strong); }
+  .mat-verdict-pill.MODERATE { color: var(--gold); }
+  .mat-verdict-pill.LIGHT { color: var(--accent); }
+  .mat-verdict-pill.GAP { color: var(--accent-deep); background: rgba(140,50,32,0.08); }
+  .mat-note { font-size: 11px; color: var(--muted); font-style: italic; }
+
+  /* ===== STRENGTHS/GAPS COMPACT ===== */
+  .zones-compact { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .zone-block { border: 1px solid var(--rule); padding: 22px 24px; background: var(--paper-warm); }
+  .zone-block.gaps { background: rgba(140,50,32,0.04); border-color: var(--accent); }
+  .zone-block.strengths { background: rgba(74,124,58,0.04); border-color: var(--strong); }
+  .zone-block h3 {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 600;
+    font-size: 22px; letter-spacing: -0.015em; margin-bottom: 14px;
+  }
+  .zone-block.gaps h3 { color: var(--accent); }
+  .zone-block.strengths h3 { color: var(--strong); }
+  .zone-block ul { list-style: none; padding: 0; }
+  .zone-block li {
+    padding: 12px 0; border-bottom: 1px dotted var(--rule); font-size: 14px;
+  }
+  .zone-block li:last-child { border-bottom: none; }
+  .zone-block li strong { display: block; font-family: 'Aeonik Pro', 'Fraunces', serif; font-size: 15px; margin-bottom: 4px; color: var(--ink); }
+  .zone-block li .context { color: var(--slate); line-height: 1.5; }
+  .zone-block li .rec { display: block; margin-top: 6px; font-style: italic; color: var(--ink); }
+  .severity-tag {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-left: 6px; vertical-align: middle;
+  }
+  .severity-tag.HIGH { background: var(--accent); color: var(--paper); }
+  .severity-tag.MEDIUM { background: var(--gold); color: var(--paper); }
+  .severity-tag.EMERGING { background: var(--slate); color: var(--paper); }
+  .severity-tag.STRATEGIC, .severity-tag.LOW { background: var(--muted); color: var(--paper); }
+
+  /* ===== PEER CARDS ===== */
+  .peer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .peer-card {
+    background: var(--paper-warm); border: 1px solid var(--rule);
+    padding: 22px 22px; display: flex; flex-direction: column; gap: 10px;
+    position: relative;
+  }
+  .peer-card.gravitational { border-color: var(--accent); border-width: 2px; }
+  .peer-card.gravitational::after {
+    content: 'GRAVITY WELL'; position: absolute; top: 12px; right: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.1em; color: var(--accent);
+    padding: 2px 8px; border: 1px solid var(--accent); border-radius: 99px;
+  }
+  .peer-badge {
+    display: inline-block; padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    border-radius: 99px; align-self: flex-start;
+  }
+  .peer-badge.topical { background: rgba(184,70,47,0.12); color: var(--accent); }
+  .peer-badge.hybrid { background: rgba(173,139,58,0.16); color: var(--gold); }
+  .peer-badge.expository { background: rgba(90,107,75,0.16); color: var(--moss); }
+  .peer-name {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 600;
+    font-size: 18px; letter-spacing: -0.015em;
+  }
+  .peer-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted);
+    line-height: 1.6;
+  }
+  .peer-signature { font-size: 13px; color: var(--slate); line-height: 1.55; }
+  .peer-signature strong { color: var(--ink); }
+  .peer-relevance {
+    font-size: 12px; padding: 10px; background: var(--paper);
+    border-left: 3px solid var(--desert); margin-top: 4px;
+    font-style: italic; color: var(--ink); line-height: 1.5;
+  }
+
+  /* ===== PHOENIX CALENDAR ===== */
+  .pcal-wrap { border: 1px solid var(--ink); background: var(--paper); }
+  .pcal-row {
+    display: grid; grid-template-columns: 160px 1fr 80px 140px;
+    border-bottom: 1px solid var(--rule);
+    align-items: stretch;
+  }
+  .pcal-row:last-child { border-bottom: none; }
+  .pcal-row.head {
+    background: var(--ink); color: var(--paper);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .pcal-row.head > div { padding: 14px 16px; border-right: 1px solid rgba(255,255,255,0.12); }
+  .pcal-row.head > div:last-child { border-right: none; }
+  .pcal-row > div { padding: 16px; border-right: 1px solid var(--rule); display: flex; align-items: center; }
+  .pcal-row > div:last-child { border-right: none; }
+  .pcal-row.gap-row { background: rgba(184,70,47,0.04); }
+  .pcal-window { font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 600; font-size: 16px; }
+  .pcal-pattern { font-size: 14px; line-height: 1.5; }
+  .pcal-pattern .peer-ex { font-size: 12px; color: var(--muted); display: block; margin-top: 6px; }
+  .pcal-weeks { font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 500; font-size: 20px; text-align: center; justify-content: center; }
+  .pcal-status { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .pcal-status.strong { color: var(--strong); }
+  .pcal-status.gap { color: var(--accent-deep); font-weight: bold; }
+
+  /* ===== PROPOSED CALENDAR ===== */
+  .calendar-wrap { border: 1px solid var(--ink); background: var(--paper); }
+  .cal-row {
+    display: grid; grid-template-columns: 180px 1fr 100px;
+    border-bottom: 1px solid var(--rule); align-items: stretch;
+  }
+  .cal-row:last-child { border-bottom: none; }
+  .cal-row.proposed { border-left: 4px solid var(--accent); background: rgba(184,70,47,0.04); }
+  .cal-month {
+    padding: 22px 20px; border-right: 1px solid var(--rule);
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 500; font-size: 17px;
+    display: flex; flex-direction: column; gap: 6px; justify-content: center;
+  }
+  .cal-content { padding: 22px 24px; border-right: 1px solid var(--rule); }
+  .cal-series {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 600;
+    font-size: 19px; letter-spacing: -0.015em; margin-bottom: 6px;
+  }
+  .cal-rationale { font-size: 14px; color: var(--slate); line-height: 1.55; }
+  .cal-rationale .fills {
+    display: inline-block; margin-top: 8px;
+    padding: 2px 10px; background: rgba(74,124,58,0.12);
+    color: var(--strong); font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+    border-radius: 99px;
+  }
+  .cal-weeks {
+    padding: 22px 16px;
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 500;
+    font-size: 22px; text-align: center;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+  }
+  .cal-weeks .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px;
+  }
+
+  /* ===== RECS ===== */
+  .recs-list { display: flex; flex-direction: column; }
+  .rec-item {
+    display: grid; grid-template-columns: 80px 1fr;
+    padding: 28px 0; border-bottom: 1px solid var(--rule);
+    align-items: start;
+  }
+  .rec-item:last-child { border-bottom: none; }
+  .rec-item.tier-strategic { border-left: 4px solid var(--accent); padding-left: 24px; background: rgba(184,70,47,0.03); }
+  .rec-num-large {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 300; font-style: italic;
+    font-size: 64px; line-height: 1; color: var(--accent);
+    letter-spacing: -0.04em;
+  }
+  .rec-body-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .rec-tier-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    align-self: flex-start; border: 1px solid currentColor;
+  }
+  .rec-tier-tag.STRATEGIC { color: var(--accent); background: rgba(184,70,47,0.06); }
+  .rec-tier-tag.PHOENIX { color: var(--desert); }
+  .rec-tier-tag.NATIONAL { color: var(--moss); }
+  .rec-tier-tag.EMERGING { color: var(--slate); }
+  .rec-tier-tag.GAP { color: var(--accent-deep); }
+  .rec-tier-tag.OPERATIONAL { color: var(--muted); }
+  .rec-title-large {
+    font-family: 'Aeonik Pro', 'Fraunces', serif; font-weight: 600;
+    font-size: 24px; letter-spacing: -0.02em; line-height: 1.15;
+  }
+  .rec-body-large { font-size: 15px; color: var(--slate); line-height: 1.6; }
+  .rec-body-large strong { color: var(--ink); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 2px solid var(--ink); padding: 32px 0 60px; margin-top: 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .radar-stage, .zones-compact, .distinctives-grid, .peer-grid { grid-template-columns: 1fr; }
+    .matrix-row, .pcal-row, .cal-row, .rec-item { grid-template-columns: 1fr; }
+    .matrix-row > div, .pcal-row > div, .cal-month, .cal-weeks { border-right: none; border-bottom: 1px solid var(--rule); }
+  }
+
+  @media print {
+    .grain { display: none; }
+    body { background: white; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="masthead-row">
+      <span>Vol. 3 <span class="dot">●</span> Central Christian Church <span class="dot">●</span> Mesa Campus</span>
+      <span>Phoenix-centered. Forward-leaning.</span>
+    </div>
+    <h1 class="title">Teaching <em>Atlas</em>. <span class="v-badge">V3</span></h1>
+    <p class="deck">Five years of Central's teaching, set against the Phoenix-metro peer set (Coleman's research), plus a concrete 2026-27 calendar that closes the regional gaps. What we said. What our actual neighbors are saying. What to do next.</p>
+    <div class="meta-strip">
+      <span>Period <strong>2021-2026</strong></span>
+      <span>Sermons <strong>262</strong></span>
+      <span>Phoenix Peers <strong>9</strong></span>
+      <span>Sources <strong>Central audit · Coleman PHX research · Barna · Pew</strong></span>
+      <span>For <strong>Adult Services Message Planning</strong></span>
+    </div>
+  </header>
+
+  <!-- ============ EXEC SUMMARY ============ -->
+  <div class="exec-summary">
+    <div class="exec-eyebrow">Executive Summary</div>
+    <h2>The data, the Phoenix peer set, and <em>ten moves</em> worth making.</h2>
+    <p>Central is running the right model for the Phoenix metro: a topical-frame / expository-spine hybrid with strong identity-of-Jesus and grace-themed series tuned to the East Valley LDS-adjacent context. That model lines up cleanly with the dominant peer pattern (CCV, Sun Valley, Compass).</p>
+    <p><strong>What Coleman's Phoenix research adds:</strong> the right peer comparison is not North Point and Life.Church. It's CCV, Sun Valley, Radiant, and Highlands Scottsdale. Three specific Phoenix-market gaps show up only when the comparison is regional.</p>
+    <p><strong>The four gaps that matter for 2026-27:</strong> (1) <strong>Central has no clear summer hook</strong> while Sun Valley, CCV, Radiant, and Compass all run an annual summer franchise. (2) <strong>Central plants no flag in extended Bible-book territory</strong>, which is exactly where Highlands and Radiant differentiate from CCV. (3) <strong>Central does not yet operate a multi-voice teaching team</strong>, which Sun Valley and CCV both use to sustain senior leaders and develop successors, an especially live conversation post Cal-to-Shan. (4) <strong>Central has no January Pray First / 21 Days corporate participation engine</strong>, which Highlands, Watermark, and Transformation Church have made standard.</p>
+    <p><strong>Five Central strengths to protect:</strong> the "I Am" / identity-of-Jesus brand (East Valley wedge CCV cannot replicate), the sustained mental health track record (deeper than any peer), the Love Beyond / MOHI mission emphasis (deepest competitive moat), the Phoenix-metro annual calendar conformity, and the grace-themed series tuned to LDS context ("Handle With Care," "Flip the Script").</p>
+    <p>Section 06 contains a concrete 2026-27 calendar that plugs the four gaps into the existing rhythm. Section 07 ranks the ten recommended moves in priority order, with the multi-voice teaching team as the strategic anchor.</p>
+  </div>
+
+  <!-- ============ TOC ============ -->
+  <div class="toc">
+    <div class="toc-eyebrow">Contents</div>
+    <ol>
+      <li><a href="#distinctives">Phoenix-market distinctives</a></li>
+      <li><a href="#radar">The retrospective radar</a></li>
+      <li><a href="#rotation">The rotation matrix</a></li>
+      <li><a href="#strengths-gaps">Strengths to protect, gaps to close</a></li>
+      <li><a href="#peers">The Phoenix peer set</a></li>
+      <li><a href="#phoenix-calendar">The Phoenix annual calendar (and where Central stands)</a></li>
+      <li><a href="#proposed">Proposed 2026-27 calendar</a></li>
+      <li><a href="#recs">Ten recommendations in priority order</a></li>
+    </ol>
+  </div>
+
+  <!-- ============ DISTINCTIVES ============ -->
+  <section id="distinctives">
+    <div class="section-eyebrow">§ 01 / Phoenix-Market Distinctives</div>
+    <h2 class="section-h">Five factors that <em>shape</em> the room.</h2>
+    <p class="section-lede">Why Phoenix-metro peer churches plan the way they do, and why Central's regional positioning matters more than its national positioning. Pulled from Coleman's research.</p>
+
+    <div class="distinctives-grid" id="distinctivesGrid"></div>
+  </section>
+
+  <!-- ============ RADAR ============ -->
+  <section id="radar">
+    <div class="section-eyebrow">§ 02 / Retrospective Radar</div>
+    <h2 class="section-h">Twelve dominant topics, <em>five rings</em>.</h2>
+    <p class="section-lede">Each ring is one ministry year. Click any year to isolate or compare. The further from center, the higher the share of that year's teaching given to the topic.</p>
+
+    <div class="radar-stage">
+      <div class="radar-container"><canvas id="radarChart"></canvas></div>
+      <div>
+        <div class="radar-controls" id="radarControls"></div>
+        <p class="radar-note">Percent of each year's sermons, not raw counts, so years of unequal length compare cleanly. A sermon can touch multiple topics.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROTATION MATRIX ============ -->
+  <section id="rotation">
+    <div class="section-eyebrow">§ 03 / Rotation Matrix</div>
+    <h2 class="section-h">Coverage against <em>peer norms</em>.</h2>
+    <p class="section-lede">Each row is a topic category that peer churches treat as a standard rotation slot. The verdict shows where Central is well-positioned and where the gaps are. Re-run this matrix each May before the next year locks.</p>
+
+    <div class="matrix-wrap">
+      <div class="matrix-row head">
+        <div>Category</div>
+        <div>Our %</div>
+        <div>Weight</div>
+        <div>Peer Examples</div>
+        <div>Verdict</div>
+      </div>
+      <div id="matrixBody"></div>
+    </div>
+  </section>
+
+  <!-- ============ STRENGTHS / GAPS ============ -->
+  <section id="strengths-gaps">
+    <div class="section-eyebrow">§ 04 / The Read</div>
+    <h2 class="section-h">Strengths to protect, <em>gaps to close</em>.</h2>
+    <p class="section-lede">The matrix translated to action. Five Central strengths worth protecting, six gaps worth closing, ranked by severity.</p>
+
+    <div class="zones-compact">
+      <div class="zone-block strengths">
+        <h3>Strengths to protect</h3>
+        <ul id="strengthsList"></ul>
+      </div>
+      <div class="zone-block gaps">
+        <h3>Gaps to close</h3>
+        <ul id="gapsList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHOENIX PEERS ============ -->
+  <section id="peers">
+    <div class="section-eyebrow">§ 05 / Phoenix Peer Set</div>
+    <h2 class="section-h">Nine churches in the <em>actual room</em>.</h2>
+    <p class="section-lede">Coleman's Phoenix-metro peer research, distilled. CCV is included as the gravity well even though it's larger than the peer band, because it defines the market the rest of us compete in.</p>
+
+    <div class="peer-grid" id="peerGrid"></div>
+  </section>
+
+  <!-- ============ PHOENIX CALENDAR ============ -->
+  <section id="phoenix-calendar">
+    <div class="section-eyebrow">§ 06 / The Phoenix Annual Calendar</div>
+    <h2 class="section-h">The metro <em>rhythm</em>, and where Central sits.</h2>
+    <p class="section-lede">Across all 9 Phoenix peers, the same 9 windows show up in every annual calendar. Coleman: "Central's planners can plot the calendar of peer churches with near-certainty 12 months out." Central status shown per window.</p>
+
+    <div class="pcal-wrap">
+      <div class="pcal-row head">
+        <div>Window</div>
+        <div>Pattern + Peer Examples</div>
+        <div>Wks</div>
+        <div>Central Status</div>
+      </div>
+      <div id="pcalBody"></div>
+    </div>
+  </section>
+
+  <!-- ============ PROPOSED CALENDAR ============ -->
+  <section id="proposed">
+    <div class="section-eyebrow">§ 07 / Forward Calendar</div>
+    <h2 class="section-h">Proposed <em>2026-27 slate</em>.</h2>
+    <p class="section-lede">Twelve series across ~47 weeks. Six are new direct responses to the gaps; six protect existing Central strengths. Items marked <span class="new-pill">NEW</span> are the moves.</p>
+
+    <div class="calendar-wrap" id="proposedCalendar"></div>
+
+    <p style="margin-top: 28px; font-style: italic; font-family: 'Aeonik Pro', 'Fraunces', serif; font-size: 15px; color: var(--slate); max-width: 760px;">A starting framework, not a locked plan. The point is to show how the regional gaps can be closed inside the rhythm Phoenix churches already use, without dropping anything that already works.</p>
+  </section>
+
+  <!-- ============ RECS ============ -->
+  <section id="recs">
+    <div class="section-eyebrow">§ 08 / Recommendations</div>
+    <h2 class="section-h">Ten moves, in <em>priority order</em>.</h2>
+    <p class="section-lede">Combining the internal audit, Coleman's Phoenix peer landscape, and current Barna/Gloo research. The multi-voice teaching team move leads because it's the operational frame for everything else, and a live post-transition conversation.</p>
+
+    <div class="recs-list" id="recsList"></div>
+  </section>
+
+  <footer>
+    <span>Teaching Atlas V3 · CentralAZ · May 2026</span>
+    <span>Internal audit + Coleman's Phoenix research + Barna/Pew benchmarks</span>
+  </footer>
+</div>
+
+<script>
+const DATA = {"meta": {"period": "2021-2026 (Five Ministry Years)", "years": ["2021-2022", "2022-2023", "2023-2024", "2024-2025", "2025-2026"], "generated": "May 2026"}, "totals": {"sermons_total": 262, "sermons_with_topic": 244, "sermons_with_scripture": 136, "years": ["2021-2022", "2022-2023", "2023-2024", "2024-2025", "2025-2026"], "unique_series": {"2021-2022": 13, "2022-2023": 9, "2023-2024": 10, "2024-2025": 14, "2025-2026": 9}, "sermons_per_year": {"2021-2022": 54, "2022-2023": 53, "2023-2024": 54, "2024-2025": 53, "2025-2026": 48}}, "top_topics_overall": [{"topic": "Faith & Trust in God", "count": 51, "pct": 19.5}, {"topic": "Salvation Heroes & Bible Narratives", "count": 43, "pct": 16.4}, {"topic": "Relationships & Community", "count": 32, "pct": 12.2}, {"topic": "Christmas & Advent", "count": 30, "pct": 11.5}, {"topic": "Mission & Evangelism", "count": 30, "pct": 11.5}, {"topic": "Gospel & Salvation", "count": 30, "pct": 11.5}, {"topic": "Discipleship & Spiritual Growth", "count": 25, "pct": 9.5}, {"topic": "Justice, Compassion & the Poor", "count": 24, "pct": 9.2}, {"topic": "Generosity & Stewardship", "count": 22, "pct": 8.4}, {"topic": "Freedom in Christ", "count": 22, "pct": 8.4}, {"topic": "Church & Body of Christ", "count": 22, "pct": 8.4}, {"topic": "Mental Health & Emotional Wellness", "count": 21, "pct": 8.0}, {"topic": "Hope, Endurance & Perseverance", "count": 20, "pct": 7.6}, {"topic": "Marriage & Family", "count": 15, "pct": 5.7}, {"topic": "Rest, Sabbath & Rhythm", "count": 13, "pct": 5.0}, {"topic": "Wisdom", "count": 13, "pct": 5.0}, {"topic": "Worship & Praise", "count": 13, "pct": 5.0}, {"topic": "Identity & Self-Worth", "count": 13, "pct": 5.0}, {"topic": "Scripture & Bible", "count": 12, "pct": 4.6}, {"topic": "Humility & Surrender", "count": 12, "pct": 4.6}, {"topic": "Suffering & Hardship", "count": 11, "pct": 4.2}, {"topic": "Leadership & Vision", "count": 10, "pct": 3.8}, {"topic": "Holy Spirit & Trinity", "count": 10, "pct": 3.8}, {"topic": "Prayer", "count": 10, "pct": 3.8}, {"topic": "Cultural Engagement & Apologetics", "count": 10, "pct": 3.8}, {"topic": "Miracles", "count": 9, "pct": 3.4}, {"topic": "Sin & Repentance", "count": 8, "pct": 3.1}, {"topic": "Serving & Calling", "count": 7, "pct": 2.7}, {"topic": "Gratitude & Contentment", "count": 5, "pct": 1.9}, {"topic": "End Times & Eternity", "count": 5, "pct": 1.9}, {"topic": "Spiritual Warfare", "count": 5, "pct": 1.9}, {"topic": "Grace & Mercy", "count": 3, "pct": 1.1}, {"topic": "Peace & Peacemaking", "count": 3, "pct": 1.1}, {"topic": "God's Nature & Character", "count": 2, "pct": 0.8}], "top_radar_topics": ["Faith & Trust in God", "Salvation Heroes & Bible Narratives", "Relationships & Community", "Christmas & Advent", "Mission & Evangelism", "Gospel & Salvation", "Discipleship & Spiritual Growth", "Justice, Compassion & the Poor", "Generosity & Stewardship", "Freedom in Christ", "Church & Body of Christ", "Mental Health & Emotional Wellness"], "radar_data": {"2021-2022": [{"topic": "Faith & Trust in God", "count": 9, "pct": 16.7}, {"topic": "Salvation Heroes & Bible Narratives", "count": 13, "pct": 24.1}, {"topic": "Relationships & Community", "count": 1, "pct": 1.9}, {"topic": "Christmas & Advent", "count": 8, "pct": 14.8}, {"topic": "Mission & Evangelism", "count": 2, "pct": 3.7}, {"topic": "Gospel & Salvation", "count": 2, "pct": 3.7}, {"topic": "Discipleship & Spiritual Growth", "count": 0, "pct": 0.0}, {"topic": "Justice, Compassion & the Poor", "count": 2, "pct": 3.7}, {"topic": "Generosity & Stewardship", "count": 6, "pct": 11.1}, {"topic": "Freedom in Christ", "count": 20, "pct": 37.0}, {"topic": "Church & Body of Christ", "count": 0, "pct": 0.0}, {"topic": "Mental Health & Emotional Wellness", "count": 5, "pct": 9.3}], "2022-2023": [{"topic": "Faith & Trust in God", "count": 18, "pct": 34.0}, {"topic": "Salvation Heroes & Bible Narratives", "count": 9, "pct": 17.0}, {"topic": "Relationships & Community", "count": 9, "pct": 17.0}, {"topic": "Christmas & Advent", "count": 4, "pct": 7.5}, {"topic": "Mission & Evangelism", "count": 1, "pct": 1.9}, {"topic": "Gospel & Salvation", "count": 1, "pct": 1.9}, {"topic": "Discipleship & Spiritual Growth", "count": 1, "pct": 1.9}, {"topic": "Justice, Compassion & the Poor", "count": 0, "pct": 0.0}, {"topic": "Generosity & Stewardship", "count": 2, "pct": 3.8}, {"topic": "Freedom in Christ", "count": 0, "pct": 0.0}, {"topic": "Church & Body of Christ", "count": 0, "pct": 0.0}, {"topic": "Mental Health & Emotional Wellness", "count": 1, "pct": 1.9}], "2023-2024": [{"topic": "Faith & Trust in God", "count": 7, "pct": 13.0}, {"topic": "Salvation Heroes & Bible Narratives", "count": 10, "pct": 18.5}, {"topic": "Relationships & Community", "count": 7, "pct": 13.0}, {"topic": "Christmas & Advent", "count": 6, "pct": 11.1}, {"topic": "Mission & Evangelism", "count": 16, "pct": 29.6}, {"topic": "Gospel & Salvation", "count": 16, "pct": 29.6}, {"topic": "Discipleship & Spiritual Growth", "count": 12, "pct": 22.2}, {"topic": "Justice, Compassion & the Poor", "count": 15, "pct": 27.8}, {"topic": "Generosity & Stewardship", "count": 1, "pct": 1.9}, {"topic": "Freedom in Christ", "count": 0, "pct": 0.0}, {"topic": "Church & Body of Christ", "count": 8, "pct": 14.8}, {"topic": "Mental Health & Emotional Wellness", "count": 3, "pct": 5.6}], "2024-2025": [{"topic": "Faith & Trust in God", "count": 10, "pct": 18.9}, {"topic": "Salvation Heroes & Bible Narratives", "count": 4, "pct": 7.5}, {"topic": "Relationships & Community", "count": 10, "pct": 18.9}, {"topic": "Christmas & Advent", "count": 6, "pct": 11.3}, {"topic": "Mission & Evangelism", "count": 0, "pct": 0.0}, {"topic": "Gospel & Salvation", "count": 1, "pct": 1.9}, {"topic": "Discipleship & Spiritual Growth", "count": 8, "pct": 15.1}, {"topic": "Justice, Compassion & the Poor", "count": 2, "pct": 3.8}, {"topic": "Generosity & Stewardship", "count": 7, "pct": 13.2}, {"topic": "Freedom in Christ", "count": 0, "pct": 0.0}, {"topic": "Church & Body of Christ", "count": 4, "pct": 7.5}, {"topic": "Mental Health & Emotional Wellness", "count": 12, "pct": 22.6}], "2025-2026": [{"topic": "Faith & Trust in God", "count": 7, "pct": 14.6}, {"topic": "Salvation Heroes & Bible Narratives", "count": 7, "pct": 14.6}, {"topic": "Relationships & Community", "count": 5, "pct": 10.4}, {"topic": "Christmas & Advent", "count": 6, "pct": 12.5}, {"topic": "Mission & Evangelism", "count": 11, "pct": 22.9}, {"topic": "Gospel & Salvation", "count": 10, "pct": 20.8}, {"topic": "Discipleship & Spiritual Growth", "count": 4, "pct": 8.3}, {"topic": "Justice, Compassion & the Poor", "count": 5, "pct": 10.4}, {"topic": "Generosity & Stewardship", "count": 6, "pct": 12.5}, {"topic": "Freedom in Christ", "count": 2, "pct": 4.2}, {"topic": "Church & Body of Christ", "count": 10, "pct": 20.8}, {"topic": "Mental Health & Emotional Wellness", "count": 0, "pct": 0.0}]}, "hot_zones": [{"topic": "Faith & Trust in God", "count": 51, "pct": 19.5}, {"topic": "Salvation Heroes & Bible Narratives", "count": 43, "pct": 16.4}], "warm_zones": [{"topic": "Relationships & Community", "count": 32, "pct": 12.2}, {"topic": "Christmas & Advent", "count": 30, "pct": 11.5}, {"topic": "Mission & Evangelism", "count": 30, "pct": 11.5}, {"topic": "Gospel & Salvation", "count": 30, "pct": 11.5}, {"topic": "Discipleship & Spiritual Growth", "count": 25, "pct": 9.5}, {"topic": "Justice, Compassion & the Poor", "count": 24, "pct": 9.2}, {"topic": "Generosity & Stewardship", "count": 22, "pct": 8.4}, {"topic": "Freedom in Christ", "count": 22, "pct": 8.4}, {"topic": "Church & Body of Christ", "count": 22, "pct": 8.4}, {"topic": "Mental Health & Emotional Wellness", "count": 21, "pct": 8.0}, {"topic": "Hope, Endurance & Perseverance", "count": 20, "pct": 7.6}, {"topic": "Marriage & Family", "count": 15, "pct": 5.7}], "cold_zones": [{"topic": "Rest, Sabbath & Rhythm", "count": 13, "pct": 5.0}, {"topic": "Wisdom", "count": 13, "pct": 5.0}, {"topic": "Worship & Praise", "count": 13, "pct": 5.0}, {"topic": "Identity & Self-Worth", "count": 13, "pct": 5.0}, {"topic": "Scripture & Bible", "count": 12, "pct": 4.6}, {"topic": "Humility & Surrender", "count": 12, "pct": 4.6}, {"topic": "Suffering & Hardship", "count": 11, "pct": 4.2}, {"topic": "Leadership & Vision", "count": 10, "pct": 3.8}, {"topic": "Holy Spirit & Trinity", "count": 10, "pct": 3.8}, {"topic": "Prayer", "count": 10, "pct": 3.8}, {"topic": "Cultural Engagement & Apologetics", "count": 10, "pct": 3.8}, {"topic": "Miracles", "count": 9, "pct": 3.4}, {"topic": "Sin & Repentance", "count": 8, "pct": 3.1}, {"topic": "Serving & Calling", "count": 7, "pct": 2.7}, {"topic": "Gratitude & Contentment", "count": 5, "pct": 1.9}, {"topic": "End Times & Eternity", "count": 5, "pct": 1.9}, {"topic": "Spiritual Warfare", "count": 5, "pct": 1.9}, {"topic": "Grace & Mercy", "count": 3, "pct": 1.1}, {"topic": "Peace & Peacemaking", "count": 3, "pct": 1.1}, {"topic": "God's Nature & Character", "count": 2, "pct": 0.8}], "never_covered": [], "book_counts": {"John": 23, "Hebrews": 22, "Matthew": 17, "Luke": 15, "Acts": 13, "James": 13, "Galatians": 12, "Psalm": 6, "Mark": 6, "Ephesians": 6, "Philippians": 5, "Jonah": 4, "Malachi": 4, "Romans": 3, "Proverbs": 3, "2 Corinthians": 3, "Colossians": 2, "Jeremiah": 1, "1 Peter": 1, "Isaiah": 1, "1 Timothy": 1, "I": 1, "Genesis": 1}, "books_by_year": {"2021-2022": {"Jonah": 4, "Galatians": 12, "Acts": 1}, "2022-2023": {"James": 13, "Psalm": 2, "Malachi": 4, "Hebrews": 20, "Acts": 1}, "2023-2024": {"Hebrews": 1, "Matthew": 12, "Acts": 10, "Luke": 5, "Mark": 3, "John": 2, "Philippians": 1, "Jeremiah": 1, "Psalm": 1, "Romans": 1}, "2024-2025": {"Psalm": 3, "Proverbs": 1, "Matthew": 1, "John": 15, "Colossians": 1, "Philippians": 4, "Mark": 2, "Luke": 1}, "2025-2026": {"Ephesians": 6, "2 Corinthians": 3, "Romans": 2, "Colossians": 1, "Matthew": 4, "Luke": 9, "Proverbs": 2, "John": 6, "1 Peter": 1, "Hebrews": 1, "Acts": 1, "Isaiah": 1, "1 Timothy": 1, "I": 1, "Genesis": 1, "Mark": 1}}, "nt_count": 142, "ot_count": 21, "nt_pct": 87.1, "top_preachers": [{"preacher": "Cal", "count": 120}, {"preacher": "Shan", "count": 62}, {"preacher": "Caleb", "count": 17}, {"preacher": "CPs", "count": 7}, {"preacher": "Rachel", "count": 5}, {"preacher": "DJ", "count": 5}, {"preacher": "Jeremy", "count": 3}, {"preacher": "Kate", "count": 3}, {"preacher": "Shane Wood", "count": 3}, {"preacher": "Lisa", "count": 2}, {"preacher": "Jon", "count": 2}, {"preacher": "Eric", "count": 2}, {"preacher": "Clayton", "count": 2}, {"preacher": "Dwight", "count": 2}, {"preacher": "Rachel Dotzler", "count": 2}], "series_by_year": {"2021-2022": [{"series": "GALATIANS: LIVE FREE", "sermon_count": 12}, {"series": "THROUGH THE VALLEY (YOU'RE NOT ALONE)", "sermon_count": 7}, {"series": "CRESCENDO: FROM SILENCE TO CELEBRATION", "sermon_count": 6}, {"series": "IN GOD WE TRUST", "sermon_count": 6}, {"series": "THE GOD WITHIN", "sermon_count": 5}, {"series": "ON THE RUN", "sermon_count": 5}, {"series": "GALATIANS: VERIFIED", "sermon_count": 3}, {"series": "GALATIANS: SET FREE", "sermon_count": 3}, {"series": "LOVE BEYOND PART 2", "sermon_count": 2}, {"series": "GALATIANS: SET FREE TO LIVE FREE", "sermon_count": 2}, {"series": "STAND ALONE", "sermon_count": 1}, {"series": "STAND ALONE- MOTHER'S DAY", "sermon_count": 1}, {"series": "STAND ALONE- SUMMIT WEEKEND", "sermon_count": 1}], "2022-2023": [{"series": "SOMETHING BETTER", "sermon_count": 11}, {"series": "SELAH", "sermon_count": 9}, {"series": "ELEVEN:ONE (every week in this series, teacher will read outloud together, Hebrews 11:1 as a reminder of what faith is)", "sermon_count": 8}, {"series": "GENUINE RELATIONSHIPS", "sermon_count": 5}, {"series": "GENUINE WISDOM", "sermon_count": 5}, {"series": "WOULD YOU BELIEVE?", "sermon_count": 5}, {"series": "MALACHI: INTERVENTION", "sermon_count": 5}, {"series": "GENUINE FAITH", "sermon_count": 3}, {"series": "STAND ALONE", "sermon_count": 2}], "2023-2024": [{"series": "LOVE BEYOND (have either a testimony or physical creative element each week to tie into each message)", "sermon_count": 11}, {"series": "STAND ALONE", "sermon_count": 9}, {"series": "JESUS MANIFESTO", "sermon_count": 9}, {"series": "ALL IN: LIFE OF ABRAHAM", "sermon_count": 6}, {"series": "CHRISTMAS AT THE MOVIES", "sermon_count": 5}, {"series": "CROSSROADS: CHOOSING THE ROAD LESS TRAVELED", "sermon_count": 4}, {"series": "THE CHOSEN", "sermon_count": 3}, {"series": "SELAH", "sermon_count": 3}, {"series": "THE LORD'S PRAYER (WE WILL SAY THE KJV LORD'S PRAYER TOGETHER EVERY WEEK)", "sermon_count": 3}, {"series": "CHRISTMAS AT CENTRAL", "sermon_count": 1}], "2024-2025": [{"series": "STAND ALONE (Stewardship/All In Update) (Use Central Generic Q1 Refresh)", "sermon_count": 7}, {"series": "FLIP THE SCRIPT [John 20:30-31] (Jesus' miracles, our personal miracles & expectation of miracles)", "sermon_count": 7}, {"series": "RELATIONSHIPS: LIFE ON THE OTHER SIDE OF YOU", "sermon_count": 6}, {"series": "THE BATTLE WITHIN: PURSUING EMOTIONAL HEALTH", "sermon_count": 6}, {"series": "JOYRIDE: SEARCHING FOR JOY", "sermon_count": 6}, {"series": "THE FIRST CHRISTMAS", "sermon_count": 5}, {"series": "I AM _______.", "sermon_count": 5}, {"series": "STAND ALONE", "sermon_count": 3}, {"series": "WHAT'S NEXT? WHAT NOW?", "sermon_count": 2}, {"series": "PSALMS", "sermon_count": 2}, {"series": "CHRISTMAS AT CENTRAL", "sermon_count": 1}, {"series": "SUMMER CHANGES EVERYTHING", "sermon_count": 1}, {"series": "TRANSITION SUNDAY CAL TO SHAN", "sermon_count": 1}, {"series": "EASTER AT CENTRAL", "sermon_count": 1}], "2025-2026": [{"series": "STAND ALONE", "sermon_count": 17}, {"series": "WHAT'S THE DEAL WITH? (what culture says vs. what God says) [Core Brand]", "sermon_count": 8}, {"series": "GRIT (ON THE BOOK OF NEHEMIAH/52 DAY CHALLENGE)", "sermon_count": 5}, {"series": "HEALTHY HUSTLE (Rest + Hard Work) {summer branding}", "sermon_count": 4}, {"series": "STAND ALONE (Summer Branding)", "sermon_count": 4}, {"series": "CHRISTMAS (ADVENT)", "sermon_count": 3}, {"series": "HANDLE WITH CARE (Core Brand)", "sermon_count": 3}, {"series": "PASSION WEEK/EASTER", "sermon_count": 3}, {"series": "SUMMER CHANGES EVERYTHING - STAND ALONE", "sermon_count": 1}]}, "benchmark_themes": [{"external_theme": "Mental Health & Anxiety as Spiritual Concern", "evidence": "Barna 2026: 42% of Gen Z cite mental health as a revival catalyst; 35% cite anxiety", "our_coverage_topic": "Mental Health & Emotional Wellness", "our_count": 21, "our_pct": 8.0, "verdict": "STRONG"}, {"external_theme": "Curiosity about Jesus (especially Gen Z/Millennial)", "evidence": "Barna 2025: 66% of US adults personally committed to Jesus, +12pts since 2021; rise led by Gen Z/Millennials", "our_coverage_topic": "Gospel & Salvation", "our_count": 30, "our_pct": 11.5, "verdict": "STRONG"}, {"external_theme": "Bible Engagement / Scripture Authority", "evidence": "Barna 2025: Millennial Bible weekly reading jumped 16 points to 50%; Gen Z rose to 49%", "our_coverage_topic": "Scripture & Bible", "our_count": 12, "our_pct": 4.6, "verdict": "MODERATE"}, {"external_theme": "Relational / Belonging / Community", "evidence": "Barna 2025/2026: Younger generations attending church specifically for relational connection, belonging, mentorship", "our_coverage_topic": "Relationships & Community", "our_count": 32, "our_pct": 12.2, "verdict": "STRONG"}, {"external_theme": "Faith vs Private/Individualized Spirituality", "evidence": "Barna 2025: 56% of US Christians say spiritual life is entirely private, correlated with weaker formation markers", "our_coverage_topic": "Discipleship & Spiritual Growth", "our_count": 25, "our_pct": 9.5, "verdict": "MODERATE"}, {"external_theme": "Mission & Justice / Serving Community", "evidence": "Tithely/Gen Z research: missional engagement and justice draw younger adults; \"passion for causes\" is a Gen Z hallmark", "our_coverage_topic": "Mission & Evangelism", "our_count": 30, "our_pct": 11.5, "verdict": "STRONG"}, {"external_theme": "Justice & Care for the Poor", "evidence": "Faith and Finance 2026: Gen Z deeply motivated by purpose, justice, tangible impact", "our_coverage_topic": "Justice, Compassion & the Poor", "our_count": 24, "our_pct": 9.2, "verdict": "STRONG"}, {"external_theme": "Apologetics / \"How do you know it's true?\"", "evidence": "Barna 2026: Gen Z is spiritually open but cautious about organized religion; wants evidence and intellectual honesty", "our_coverage_topic": "Cultural Engagement & Apologetics", "our_count": 10, "our_pct": 3.8, "verdict": "EMERGING"}, {"external_theme": "Friendship as Spiritual Practice", "evidence": "Tithely 2026: \"Friendship in the Kingdom is not just emotional support \u2014 it is discipleship\"", "our_coverage_topic": "Relationships & Community", "our_count": 32, "our_pct": 12.2, "verdict": "STRONG"}, {"external_theme": "Ancient/Embodied Practices (prayer, Sabbath, communion)", "evidence": "Tithely 2026: Gen Z drawn toward what feels rooted, historic, embodied; ancient practices feel steady", "our_coverage_topic": "Prayer", "our_count": 10, "our_pct": 3.8, "verdict": "MODERATE"}, {"external_theme": "AI & Spiritual Authority / Technology Discipleship", "evidence": "Barna 2026: 1 in 3 US adults say AI spiritual advice is as trustworthy as a pastor; 2 in 5 among Gen Z/Millennial", "our_coverage_topic": null, "our_count": 0, "our_pct": 0.0, "verdict": "GAP"}, {"external_theme": "Marriage & Family Renewal", "evidence": "Barna 2025: 78% of Gen Z and 73% of Millennials still hope to marry; \"persistent cultural value\"", "our_coverage_topic": "Marriage & Family", "our_count": 15, "our_pct": 5.7, "verdict": "LIGHT"}, {"external_theme": "Suffering, Lament, Grief Theology", "evidence": "Barna trends: spiritual openness \"emerging from dislocation\"; mental health, loss, anxiety as drivers", "our_coverage_topic": "Suffering & Hardship", "our_count": 11, "our_pct": 4.2, "verdict": "LIGHT"}, {"external_theme": "Holy Spirit & Charismatic Renewal", "evidence": "Gen Z spiritual hunger trends toward experiential/embodied faith", "our_coverage_topic": "Holy Spirit & Trinity", "our_count": 10, "our_pct": 3.8, "verdict": "LIGHT"}, {"external_theme": "Sabbath/Rest in a Burnout Culture", "evidence": "Barna 2025: Pastor + congregant burnout was the #4 most-read trend; rest a Gen Z mental-health hook", "our_coverage_topic": "Rest, Sabbath & Rhythm", "our_count": 13, "our_pct": 5.0, "verdict": "STRONG"}], "standalone_count": 46, "series_sermon_count": 216};
+const V2 = {"rotation_matrix": [{"category": "Identity / Who you are in Christ", "our_count": 15, "our_pct": 5.7, "peer_examples": "Life.Church \"Who Do You Think You Are\", Elevation \"Same Lies New Loops\"", "note": "", "verdict": "MODERATE"}, {"category": "Anxiety & Mental Health", "our_count": 21, "our_pct": 8.0, "peer_examples": "Life.Church \"Winning the War in Your Mind\", Elevation \"Hidden Issues\"", "note": "Mesa strength.", "verdict": "MODERATE"}, {"category": "Relationships / Marriage / Family", "our_count": 47, "our_pct": 17.9, "peer_examples": "Transformation \"Relationship Goals\", NP \"New Rules for Love Sex and Dating\"", "note": "", "verdict": "STRONG"}, {"category": "Money / Generosity / Stewardship", "our_count": 22, "our_pct": 8.4, "peer_examples": "Gateway \"Blessed Life\", NP \"How to Be Rich\"", "note": "", "verdict": "MODERATE"}, {"category": "Doubt / Apologetics / Deconstruction", "our_count": 10, "our_pct": 3.8, "peer_examples": "NCC \"Doubters Club\", Crossroads \"Doubt is a Doorway\"", "note": "Emerging at Mesa (2025-26).", "verdict": "LIGHT"}, {"category": "Cultural Moment / Politics / \"This Moment\"", "our_count": 10, "our_pct": 3.8, "peer_examples": "Village \"Thrones and Thorns\", Village \"Our Moment\"", "note": "Light.", "verdict": "LIGHT"}, {"category": "Prayer & Spiritual Disciplines / Fasting", "our_count": 10, "our_pct": 3.8, "peer_examples": "Highlands \"Pray First / 21 Days\", Watermark \"Praying Church\"", "note": "Significant gap.", "verdict": "LIGHT"}, {"category": "Vision / Fresh-Start / New Year", "our_count": 30, "our_pct": 11.5, "peer_examples": "NCC \"Dream\", Elevation \"Begin Again\"", "note": "", "verdict": "STRONG"}, {"category": "Discipleship / The Jesus Way / Formation", "our_count": 35, "our_pct": 13.4, "peer_examples": "NCC \"The Jesus Way\", Summit \"Listen\" (parables)", "note": "", "verdict": "STRONG"}, {"category": "Hope / Second Chances / Fresh Start", "our_count": 50, "our_pct": 19.1, "peer_examples": "Elevation \"Begin Again\", Saddleback \"Finding Your Way Back to God\"", "note": "", "verdict": "STRONG"}, {"category": "Mission / Evangelism / Justice", "our_count": 54, "our_pct": 20.6, "peer_examples": "NCC categorizes as Mission; Watermark \"World of Tomorrow\"", "note": "Mesa strength (Love Beyond, MOHI).", "verdict": "STRONG"}, {"category": "Rest, Sabbath & Burnout", "our_count": 13, "our_pct": 5.0, "peer_examples": "NP-adjacent; emerging across all churches", "note": "Mesa strength (Healthy Hustle).", "verdict": "MODERATE"}, {"category": "Suffering & Lament", "our_count": 11, "our_pct": 4.2, "peer_examples": "Village \"Yahweh\"; embedded in book series", "note": "Light. Mostly inside MH series.", "verdict": "LIGHT"}, {"category": "OT Narrative / Bible Book Walk", "our_count": 0, "our_pct": 0.0, "peer_examples": "Watermark Colossians/Year of the Word; Summit Daniel/Ephesians; Highlands Genesis", "note": "Largest gap. Only 13% OT, no historical books or major prophets.", "verdict": "GAP"}], "proposed_calendar": [{"window": "August (Launch)", "anchor": false, "series_name": "Vision Cast + Standalone", "weeks": "1-2", "category": "Vision", "rationale": "Standard fall vision cast. Set the year theme.", "fills_gap": ""}, {"window": "September - October", "anchor": true, "anchor_label": "Fall Launch", "series_name": "Genesis 1-11: In the Beginning", "weeks": "6", "category": "OT Narrative / Bible Book Walk", "rationale": "Direct response to the 87/13 NT/OT gap. Origin stories (Creation, Fall, Flood, Babel) draw new fall attenders and serve biblically under-formed younger adults. Modeled after Highlands \"In the Beginning God\".", "fills_gap": "OT Narrative + biblical literacy"}, {"window": "Late October", "anchor": false, "series_name": "Handle With Care (Annual)", "weeks": "3", "category": "Money / Generosity", "rationale": "Mesa's annual stewardship anchor. Keep the pattern.", "fills_gap": ""}, {"window": "November", "anchor": false, "series_name": "Gratitude & The Table", "weeks": "3", "category": "Hope / Fresh Start", "rationale": "Thanksgiving-anchored series on gratitude and communion theology. Light textual series leading into Advent.", "fills_gap": ""}, {"window": "December", "anchor": true, "anchor_label": "Advent", "series_name": "Advent series (TBD theme)", "weeks": "4 + Christmas Eve", "category": "Christmas", "rationale": "Annual Advent rhythm. Fresh creative concept each year per peer norm.", "fills_gap": ""}, {"window": "January", "anchor": true, "anchor_label": "Vision + Fresh-Start", "series_name": "Pray First: 21 Days of Prayer + 3-Week Teaching", "weeks": "3 + 21-day fast", "category": "Prayer & Spiritual Disciplines", "rationale": "Modeled directly on Highlands, Transformation, Watermark January convention. Closes the largest topical gap in the Mesa slate (Prayer at 3.8%). Three messages: Lord's Prayer, Lament, Listening Prayer. 21 Days of Prayer & Fasting as the participation engine.", "fills_gap": "Prayer + spiritual practice"}, {"window": "February", "anchor": false, "series_name": "Made for Each Other (Marriage & Family)", "weeks": "4", "category": "Relationships / Marriage", "rationale": "Valentine's-anchored, per peer norm. A dedicated marriage/family series has been carried only by Mother's/Father's Day stand-alones in the 5-year window. Barna 2025: 78% of Gen Z and 73% of Millennials still hope to marry.", "fills_gap": "Marriage & Family"}, {"window": "Late February - March", "anchor": false, "series_name": "Faith & Tech: Following Jesus in the Age of AI", "weeks": "3", "category": "Cultural Moment", "rationale": "Three messages on digital formation, AI as spiritual companion, and embodied life in a disembodying age. Barna 2026: 1 in 3 adults treat AI spiritual advice as comparable to a pastor's (2 in 5 for Gen Z/Millennial). Puts Mesa ahead of where most non-denominational churches will land in 2027.", "fills_gap": "AI/Tech discipleship"}, {"window": "Lent \u2192 Easter", "anchor": true, "anchor_label": "Easter Ramp", "series_name": "What's the Deal With? (Year 2)", "weeks": "5", "category": "Doubt / Apologetics", "rationale": "Make the apologetics arc a permanent annual feature (per recommendation #5 in V1). Lee Strobel, evidence, \"How do you know?\" questions. Year 1 was strong; lock it in as fixed.", "fills_gap": "Apologetics permanence"}, {"window": "Post-Easter (May)", "anchor": false, "series_name": "Lament: Where God Meets Our Grief", "weeks": "4", "category": "Suffering & Lament", "rationale": "Standalone series on biblical lament drawn from Psalms, Job, Lamentations. Closes the suffering/lament gap (4.2%) before crisis forces it. Barna 2026 frames revival as \"emerging from dislocation.\"", "fills_gap": "Suffering & Lament"}, {"window": "Summer", "anchor": true, "anchor_label": "Summer Bible Book", "series_name": "Philippians: Joy in Every Season", "weeks": "6", "category": "OT/NT Bible Book", "rationale": "Peer norm: summer is the expository slot. Philippians is the most common peer choice and pairs well with summer attendance patterns (committed core). Continues Mesa's strong record on shorter epistles.", "fills_gap": "Annual Bible book"}, {"window": "Late Summer", "anchor": false, "series_name": "Healthy Hustle (Year 2) or Standalone", "weeks": "3", "category": "Rest & Rhythm", "rationale": "Rest/rhythm is a Mesa strength. Option to revisit the theme or use the window for guest preachers and creative experiments.", "fills_gap": ""}]};
+const V3 = {"phoenix_peers": [{"name": "Christ's Church of the Valley (CCV)", "city": "Peoria, AZ", "pastor": "Ashley Wooldridge", "attendance": "54,142 weekly", "size_note": "#3 largest church in U.S. (2025 Outreach 100)", "tier": "gravitational", "orientation": "topical", "signature": "Annual \"I Declare\" January series, \"At The Movies\" summer, polished cinematic Christmas. Multi-preacher teaching teams. Shares sermon creative free to other churches.", "recent_series": "2026: Under New Management, CHANGED, Revelation, Genesis. 2025: How To Read The Bible, A Good Friend, Reordering Your Life, Tough Questions For Christianity, Anxiety: Finding Peace, One Thing. 2024: I Declare, Unoffendable, Run With The Horses, Psalms, Remember, How To Hear From God, Running From Nineveh.", "mesa_relevance": "The gravity well. Any Mesa topical series will be implicitly compared to CCV's production. Distinct positioning needed."}, {"name": "Sun Valley Community Church", "city": "Gilbert, AZ", "pastor": "Chad Moore", "attendance": "10,034 weekly", "size_note": "Outreach 100, 2025. 7 locations.", "tier": "true_peer", "orientation": "topical", "signature": "Multi-preacher teaching team (Moore + Robert Watson + guest Megan Fate Marshman). Heavy lifestyle-application orientation. Annual \"At The Movies\" summer.", "recent_series": "2026: The Art of Rest, Take Heart, Knowing God, In His Presence. 2025: Then Now Always, Spirit of Christmas, Living Together, Battle Ready, Change of Heart, Walk With Me, The Life You've Always Wanted, The Family Tree.", "mesa_relevance": "Closest true peer. East Valley location, similar size, similar topical-with-scripture spine. Direct competitive overlap."}, {"name": "Radiant Church", "city": "Surprise, AZ", "pastor": "Caden & Hope Metcalf", "attendance": "~5,000-8,000 across 5 AZ locations", "size_note": "Assemblies of God affiliation", "tier": "true_peer", "orientation": "hybrid", "signature": "Hybrid: a few extended expository walks anchor the year (24+ week Gospel of Matthew in 2024-25), surrounded by topical series. Pentecostal flavor, healing/Spirit themes.", "recent_series": "2024-25: Gospel of Matthew (24+ wks), Thrill of Hope (Advent), At the Movies. 2025: Hebrews, Nothing Wasted, The Journey, Bless This House. 2024: You Promised, The Gift, Entrusted, A Life of Peace, Gospel of John, Empowered, Unashamed, Flourish.", "mesa_relevance": "Shows what extended expository looks like in the Phoenix market. The Matthew walk is notable - 24+ weeks is bold for the metro."}, {"name": "Highlands Church Scottsdale", "city": "Scottsdale, AZ", "pastor": "Thomas Slager", "attendance": "~3,500-5,000", "size_note": "Most expository in the Phoenix peer set", "tier": "true_peer", "orientation": "expository", "signature": "Almost every series is book-of-the-Bible. \"Faith Does: A Study in James,\" \"Dear Church: A Study in 1 & 2 Corinthians.\"", "recent_series": "Spring 2026: Faith Does (James). 2025: Dear Church (1-2 Cor), Advent (life of John the Baptist). 2024: Lord is My Shepherd (Psalm 23), Knowing Jesus (Luke). Archive: Romans, Philippians, Colossians, Genesis, Ephesians, 2 Timothy, Letters of John, Sermon on the Mount, Parables.", "mesa_relevance": "The expository pole. Shows Mesa what a book-driven Phoenix model looks like and where Mesa could lean if it wants OT/expository differentiation."}, {"name": "Rock Point Church", "city": "Queen Creek, AZ", "pastor": "Bill Bush", "attendance": "~2,605 weekly", "size_note": "Outreach 100 historical", "tier": "true_peer", "orientation": "hybrid", "signature": "Verse-by-verse expository when in a book; topical otherwise. Casual, humor-forward delivery.", "recent_series": "2026: Never Enough. 2025: Ephesians (multi-part walk). #blessed (Matthew 5).", "mesa_relevance": "East Valley peer. Smaller scale but proves verse-by-verse work in a Mesa-adjacent context."}, {"name": "Compass Christian Church", "city": "Chandler, AZ", "pastor": "Brian Jobe", "attendance": "~2,500-3,500", "size_note": "Chandler + Casa Grande", "tier": "true_peer", "orientation": "topical", "signature": "Tagline-driven preaching (church mission \"Love God. Love People. Share Jesus.\" reused as series title). Runs \"At The Movies\" annually.", "recent_series": "2025: What Matters Most. Anatomy of a Church, Old School, Picture Perfect, Crucial Conversations, Love God Love People Share Jesus, At The Movies: Encanto (2024), True Riches.", "mesa_relevance": "East Valley peer with topical-dominant approach."}, {"name": "Cornerstone Church", "city": "Chandler + Scottsdale, AZ", "pastor": "Linn Winters", "attendance": "~4,000-7,000 across 2 campuses", "size_note": "Converge Worldwide affiliation", "tier": "true_peer", "orientation": "topical", "signature": "\"Friend Day\" outreach weekends as recurring tentpoles (Oct 2025 guest: Sean Lowe from \"The Bachelor\").", "recent_series": "Catalog thinly indexed.", "mesa_relevance": "East Valley peer. Outreach-event model worth noting."}, {"name": "Mission Church", "city": "Gilbert, AZ", "pastor": "Landon MacDonald", "attendance": "~5,000 weekly", "size_note": "Active podcast feed", "tier": "true_peer", "orientation": "hybrid", "signature": "Multi-week Heaven series (2024) suggests willingness to go deep on a theme.", "recent_series": "2024: Heaven (multi-week).", "mesa_relevance": "Gilbert peer, similar size to Mesa. Direct East Valley competition."}, {"name": "Pure Heart Church", "city": "Glendale + Peoria, AZ", "pastor": "Dan Steffen", "attendance": "~3,000-4,500 weekly", "size_note": "ECFA-accredited, non-denominational", "tier": "true_peer", "orientation": "topical", "signature": "Topical/seeker-friendly. Catalog thinly indexed online.", "recent_series": "Catalog thinly indexed.", "mesa_relevance": "West Valley peer."}], "phoenix_calendar": [{"window": "January", "weeks": "1-2", "pattern": "New Year Vision / Personal Formation", "peer_examples": "Central \"Grit\", CCV \"One Thing\"/\"I Declare\", Sun Valley \"In His Presence\", Radiant \"Thrill of Hope\"", "mesa_status": "Strong - already runs this"}, {"window": "Feb - Easter", "weeks": "8-12", "pattern": "Mid-length topical or book series climaxing at Easter (split into 2 series)", "peer_examples": "Central \"Handle With Care\", Sun Valley \"Knowing God\" \u2192 \"Take Heart\", CCV \"Anxiety: Finding Peace\"", "mesa_status": "Strong - well established"}, {"window": "Easter Weekend", "weeks": "1", "pattern": "Branded Easter", "peer_examples": "Universal: \"Easter at Central / CCV / Sun Valley\"", "mesa_status": "Strong - annual rhythm"}, {"window": "Apr - May", "weeks": "4-6", "pattern": "Identity / Family / Mother's Day", "peer_examples": "Central \"I Am\", CCV \"Tough Questions\" + Mother's Day", "mesa_status": "Strong - \"I Am\" was a signature move"}, {"window": "Jun - Jul", "weeks": "4-7", "pattern": "SUMMER CULTURAL HOOK - \"At The Movies\" or culture-engaging summer", "peer_examples": "Sun Valley, CCV, Radiant, Compass all run \"At The Movies\" annually", "mesa_status": "GAP - Mesa does not have a clear summer hook"}, {"window": "Aug - Sep", "weeks": "5-8", "pattern": "Returning-to-routine biblical/topical", "peer_examples": "Central \"Ephesians 6\", CCV \"Reordering Your Life\"", "mesa_status": "Strong"}, {"window": "October", "weeks": "4-6", "pattern": "Values / Generosity / Friendship Outreach", "peer_examples": "Central \"Values\", CCV \"A Good Friend\", Cornerstone \"Friend Day\"", "mesa_status": "Strong"}, {"window": "November", "weeks": "3-4", "pattern": "Gratitude / Prayer", "peer_examples": "Central \"VOICES\", CCV \"The Power of Gratitude\"", "mesa_status": "Strong"}, {"window": "December", "weeks": "3-4", "pattern": "Advent / Christmas (universal)", "peer_examples": "Central \"Gifts of Advent\", CCV \"Light of the World\", Sun Valley \"Spirit of Christmas\", Radiant \"Thrill of Hope\"", "mesa_status": "Strong"}], "mesa_vs_peers": {"where_mesa_is_strong": [{"strength": "Identity-of-Jesus signature (\"I Am\")", "context": "Spring 2025 \"I Am\" was Mesa's strongest brand move. Leans directly into East Valley LDS-adjacent context where \"who is Jesus, really?\" is alive. CCV does not own this lane.", "recommendation": "Lean further into it. Run an \"I Am\" / identity-of-Jesus series annually."}, {"strength": "Phoenix-metro annual rhythm conformity", "context": "Mesa already runs the full standard Phoenix-metro calendar (Jan vision \u2192 Easter ramp \u2192 Mother's Day \u2192 fall foundations \u2192 gratitude \u2192 Advent). No gaps in the annual frame.", "recommendation": "Protect the rhythm. Coleman: \"deviating risks misreading the season.\""}, {"strength": "Grace-vs.-works themes for LDS context", "context": "Mesa's \"Handle With Care\" and \"Flip the Script\" series are well-positioned for the East Valley LDS-adjacent audience.", "recommendation": "Continue. This is regionally distinctive."}, {"strength": "Mental health emphasis", "context": "Mesa has 21 sermons across 5 years on mental health/emotional wellness. Few peer churches have this sustained track record. CCV \"Anxiety\" (2025) was a one-off; Mesa's is sustained.", "recommendation": "Continue. This is a real competitive differentiator."}, {"strength": "Mission & justice (Love Beyond / MOHI)", "context": "54 sermons across the period (20.6%). Highest sustained mission emphasis in the peer set.", "recommendation": "Continue. This is the deepest competitive moat."}], "where_mesa_has_gaps": [{"gap": "Summer cultural hook", "severity": "HIGH", "context": "Sun Valley, CCV, Radiant, and Compass ALL run \"At The Movies\" every summer. Mesa does not have a clear summer brand. Coleman: \"If Central's summer attendance dip is less than 15%, you can experiment; otherwise stick with the 'At The Movies' tier of hook -- or develop a Central-owned summer brand.\"", "recommendation": "Develop a Mesa-owned summer brand. Don't just copy \"At The Movies\" - own a distinctive Mesa summer franchise."}, {"gap": "OT narrative / extended Bible book walk", "severity": "HIGH", "context": "87/13 NT/OT split across 5 years. Highlands and Radiant both differentiate on book-walks. Radiant's 24+ week Gospel of Matthew is a known competitive move in the metro.", "recommendation": "Coleman: \"A multi-part annual book series of 8-12 weeks (a Gospel walk, or Romans). This puts Central in the small bucket with Highlands and Radiant -- a deeper-Bible flag that CCV doesn't plant.\" Suggested: Genesis 1-11 fall 2026 OR Romans for spring 2027."}, {"gap": "January Pray First / 21 Days of Prayer pattern", "severity": "MEDIUM", "context": "National peer norm: Highlands, Watermark, Transformation all run this in January. Phoenix peers: less universal, but Sun Valley's \"In His Presence\" is prayer/formation-flavored. Mesa runs \"Grit\" / \"Don't Just Make Resolutions\" - good vision content but not a prayer-led participation engine.", "recommendation": "Add a Mesa 21 Days of Prayer initiative in January 2027. Could fold into existing Grit-style framing."}, {"gap": "Multi-voice teaching team model", "severity": "MEDIUM", "context": "Coleman: \"Sun Valley (Chad Moore + Robert Watson + Megan Fate Marshman) and CCV (Wooldridge + teaching team) both show that distributing weekends across 3-4 voices per series sustains the senior leader and accelerates raising up successors.\"", "recommendation": "Operationally significant. Worth a separate planning conversation - this is about pulpit succession and team development, not just topic mix."}, {"gap": "Faith & Tech / AI discipleship", "severity": "EMERGING", "context": "Life.Church already ran \"Anxious Generation\" (tech and AI). Barna 2026 shows 1 in 3 adults treat AI spiritual advice as comparable to a pastor's. Mesa not yet covered.", "recommendation": "3-week arc on AI/digital formation. Positions Mesa ahead of most peers in the metro."}, {"gap": "Sermon resource open-sourcing (CCV model)", "severity": "STRATEGIC / LOW URGENCY", "context": "CCV gives series art away free (ccv.church/ccv-resources/sermon-series). Builds the local pastor network and signals leadership.", "recommendation": "Coleman Stage 3 (12-18 months out). Productize Mesa series creative. Long-term differentiation play, not urgent."}]}, "phoenix_distinctives": [{"factor": "Summer attendance dip", "data": "Snowbirds leave, families travel, +110\u00b0F heat depresses casual attendance", "implication": "This is why every large Phoenix church runs a culture-leaning summer series. Universal pattern in the metro."}, {"factor": "East Valley LDS density", "data": "Mesa/Gilbert have unusually high LDS density", "implication": "Pushes Mesa toward identity-of-Jesus and grace-vs.-works themes. Mesa already does this well (\"I Am\", \"Handle With Care\")."}, {"factor": "Phoenix population growth", "data": "Maricopa County is 4th most-populous U.S. county at 4,673,096 residents (Census Bureau, July 2024)", "implication": "Fuels church-plant culture. Means new attenders are constantly arriving."}, {"factor": "Arizona religious unaffiliation", "data": "31% of Arizonans religiously unaffiliated (Pew 2023-24), up from 22% in 2007. Phoenix/Prescott ranked 9th least Bible-minded media market (Barna 2016).", "implication": "Pushes peer churches toward seeker-friendly topical hooks rather than verse-by-verse exposition."}, {"factor": "CCV gravitational pull", "data": "CCV at 54,142 weekly is #3 largest church in U.S. Polished cinematic production. Gives sermon series creative away free.", "implication": "Any Mesa topical series will be implicitly compared. Distinct positioning critical."}]};
+const V3_CAL = {"proposed_calendar_2026_27": [{"window": "Late August 2026", "series": "Vision Cast + Standalone", "weeks": "1-2", "category": "Vision", "fills_gap": "", "is_new": false, "rationale": "Standard fall vision cast. Sets the year theme. Matches the Phoenix-metro pattern."}, {"window": "September - October", "series": "Genesis 1-11: In the Beginning", "weeks": "6", "category": "OT Narrative / Book Walk", "fills_gap": "OT narrative + biblical literacy", "is_new": true, "rationale": "Coleman Stage 2 wedge: \"A multi-part annual book series of 8-12 weeks puts Central in the small bucket with Highlands and Radiant - a deeper-Bible flag that CCV doesn't plant.\" Origin stories (Creation, Fall, Flood, Babel) draw fall attenders. Closes the 87/13 NT/OT gap. Modeled after Highlands \"In the Beginning God.\""}, {"window": "Late October", "series": "Handle With Care (Annual)", "weeks": "3", "category": "Stewardship", "fills_gap": "", "is_new": false, "rationale": "Mesa's annual stewardship anchor. Matches peer norm (Gateway \"Blessed Life\" annually)."}, {"window": "November", "series": "Gratitude & The Table", "weeks": "3", "category": "Gratitude", "fills_gap": "", "is_new": false, "rationale": "Thanksgiving-anchored. Light series leading into Advent. Matches CCV \"Power of Gratitude\" pattern."}, {"window": "December", "series": "Advent series (theme TBD)", "weeks": "4 + Christmas Eve", "category": "Christmas", "fills_gap": "", "is_new": false, "rationale": "Annual Advent rhythm. Universal across all peers. Fresh creative concept each year."}, {"window": "January 2027", "series": "Pray First Mesa: 21 Days + 3-Week Teaching", "weeks": "3 + 21-day fast", "category": "Prayer / Vision", "fills_gap": "Prayer as practice + participation engine", "is_new": true, "rationale": "Adds the prayer-led participation engine that Highlands, Watermark, and Transformation Church use. Sun Valley \"In His Presence\" (Jan 2026) is the closest Phoenix equivalent. Three messages: Lord's Prayer, Lament, Listening Prayer. Pairs Mesa's existing January vision pattern with a corporate prayer call."}, {"window": "February", "series": "Made for Each Other (Marriage & Family)", "weeks": "4", "category": "Relationships", "fills_gap": "Dedicated marriage & family series", "is_new": true, "rationale": "Valentine's-anchored, per peer norm. No dedicated Mesa marriage series in the 5-year window. Matches CCV \"I Declare: Marriage Edition\", Transformation \"Relationship Goals: IRL\"."}, {"window": "Late February - March", "series": "Faith & Tech: Following Jesus in the Age of AI", "weeks": "3", "category": "Cultural Moment", "fills_gap": "AI/Tech discipleship", "is_new": true, "rationale": "Three messages on AI as spiritual companion, digital formation, embodied life. Barna 2026: 1 in 3 adults treat AI advice as comparable to a pastor's. Life.Church already moved here (\"Anxious Generation\"). Positions Mesa ahead of CCV and Sun Valley in the metro."}, {"window": "Lent \u2192 Easter", "series": "What's the Deal With? (Year 2)", "weeks": "5", "category": "Apologetics", "fills_gap": "Apologetics permanence", "is_new": false, "rationale": "Make the 2025-26 apologetics arc annual. Matches Stanley's Easter ramp pattern. Lee Strobel, \"How do you know?\" questions. Locks the spring slot."}, {"window": "Post-Easter (May)", "series": "I Am: The Identity of Jesus (Year 2)", "weeks": "5", "category": "Identity / Mother's Day", "fills_gap": "", "is_new": false, "rationale": "Coleman wedge (a): \"Lean further into \u2018I Am'.\" Mesa's strongest brand move (Spring 2025). Aligns with East Valley LDS-adjacent demographic. CCV does not own this lane."}, {"window": "Summer (June - July)", "series": "A Central-owned summer brand (theme TBD)", "weeks": "6", "category": "Summer Cultural Hook", "fills_gap": "Phoenix-metro summer slot, distinct from \"At The Movies\"", "is_new": true, "rationale": "Coleman: \"develop a Central-owned summer brand\" rather than copy \"At The Movies\" (which Sun Valley, CCV, Radiant, and Compass all run). This is an all-Central play, not Mesa-only. Build a recurring summer franchise that becomes Central's answer to the universal Phoenix summer dip - story-driven, narrative-anchored, and distinctive. Could lean on biblical character studies, \"real stories\" testimony arcs, or a recurring brand concept that becomes Central's annual summer expectation."}, {"window": "Late July - Early August", "series": "Lament: Where God Meets Our Grief", "weeks": "4", "category": "Suffering & Lament", "fills_gap": "Suffering / Lament", "is_new": true, "rationale": "Standalone series on biblical lament drawn from Psalms, Job, Lamentations. Closes the suffering gap (4.2%) before crisis. Summer-end positioning catches the committed-core audience. Pairs with mental health work."}]};
+const V3_RECS = [{"n": "01", "title": "Move to a multi-voice teaching team model.", "tier": "STRATEGIC", "body": "Coleman: \"Sun Valley (Chad Moore + Robert Watson + Megan Fate Marshman) and CCV (Wooldridge + teaching team) both show that distributing weekends across 3-4 voices per series sustains the senior leader and accelerates raising up successors.\" Given the recent transition from Cal to Shan, this is the moment to bake a multi-voice model into the planning rhythm. It protects Shan from preaching burnout, develops younger teaching pastors, and sets a succession pattern. Concretely: 3-4 named voices per major series, with Shan anchoring the opening and closing weeks. Sun Valley's model is the closest peer analog."}, {"n": "02", "title": "Develop an all-Central summer brand. Skip \"At The Movies.\"", "tier": "PHOENIX-SPECIFIC", "body": "Sun Valley, CCV, Radiant, and Compass all run \"At The Movies\" every summer. Copying it puts Central in fourth place against churches that have run it for years. Don't do that. The Phoenix-metro summer attendance dip is real (snowbirds + heat + family travel), so the slot needs a hook, but it should be Central-owned. Concept work needed - candidates include a story-driven character series, a \"real stories\" testimony arc, or a brand concept that becomes Central's recurring summer expectation. Build it once, run it annually, and it compounds across years the way \"At The Movies\" has for peers."}, {"n": "03", "title": "Add an annual extended Bible book walk. Plant a flag CCV doesn't plant.", "tier": "PHOENIX-SPECIFIC", "body": "Coleman Stage 2 wedge: \"A multi-part annual book series of 8-12 weeks puts Central in the small bucket with Highlands and Radiant - a deeper-Bible flag that CCV doesn't plant.\" Radiant ran 24+ weeks through Matthew in 2024-25; Highlands runs book-by-book year-round. This is competitive positioning, not just biblical balance. Recommended for fall 2026: Genesis 1-11 (6 weeks). Origin stories double as a fall outreach hook and address Central's 87/13 NT/OT split. Threshold to drop: if attendance drops more than 8% in the first 4 weeks vs. an equivalent topical, pull back."}, {"n": "04", "title": "Launch a January Pray First initiative with 21 Days of Prayer.", "tier": "NATIONAL NORM", "body": "Highlands, Watermark, and Transformation Church all run this exact pattern. Sun Valley's \"In His Presence\" (Jan 2026) is the closest Phoenix equivalent. Pairs a 21-day corporate fast with a 3-week teaching series (Lord's Prayer, lament, listening prayer). Closes the 3.8% prayer gap in Central's teaching, and crucially adds a participation engine that turns January from \"we heard a vision sermon\" into \"we did something together.\" Folds naturally into the existing Grit / Don't Just Make Resolutions framing."}, {"n": "05", "title": "Lean further into \"I Am\" and identity-of-Jesus.", "tier": "PHOENIX-SPECIFIC", "body": "Coleman wedge (a): \"Lean further into \u2018I Am.'\" Spring 2025 \"I Am\" was Central's strongest brand move. The East Valley LDS-adjacent demographic responds to \"who is Jesus, really?\" content in a way CCV can't replicate, because CCV doesn't share Central's East Valley positioning. Make \"I Am\" an annual or biennial spring fixture. Each year, swap the I AM statements rotated. Add Mother's Day messages on identity (made in His image) inside it."}, {"n": "06", "title": "Make apologetics permanent.", "tier": "NATIONAL NORM", "body": "\"What's the Deal With?\" (2025-26) was a strong move. Make a question-driven apologetics block a fixed feature each year, likely as the Lent-to-Easter ramp. Stanley's model: short series leading to Easter on \"Why did Jesus come, why did Jesus die, why did Jesus rise\" sets up an Easter commitment moment. Gen Z is open to Jesus but cautious about organized religion; evidence and intellectual honesty are exactly what they ask for. Adoption: lock the spring slot to apologetics year over year."}, {"n": "07", "title": "Add a 3-week \"Faith & Tech\" arc on AI.", "tier": "EMERGING", "body": "Barna 2026: 1 in 3 US adults (2 in 5 Gen Z/Millennial) treat AI spiritual advice as comparable to a pastor's. Life.Church already ran \"Anxious Generation\" on tech and AI. Three messages on AI as spiritual companion, digital formation, and embodied life put Central ahead of CCV and Sun Valley in the metro. Schedule for late Feb or March, between the Prayer initiative and Lent."}, {"n": "08", "title": "Teach lament before crisis forces it.", "tier": "GAP CLOSE", "body": "A standalone 4-week series on biblical lament drawn from Psalms, Job, and Lamentations. Closes the 4.2% suffering/lament gap. Particularly resonant with Gen Z, who cite mental health as the #1 revival catalyst (Barna 2026). Pairs naturally with Central's existing mental health track record (Through the Valley, The Battle Within), but goes one level deeper into the biblical category of lament itself."}, {"n": "09", "title": "Add a dedicated marriage & family series.", "tier": "GAP CLOSE", "body": "No dedicated marriage series in the 5-year audit window - carried mostly by Mother's Day and Father's Day stand-alones. Phoenix peers all run dedicated marriage content (CCV \"I Declare: Marriage Edition\", Transformation \"Relationship Goals: IRL\"). Schedule for February, anchored to Valentine's. 4-6 weeks. Barna 2025: 78% of Gen Z and 73% of Millennials still hope to marry."}, {"n": "10", "title": "Audit topical rotation annually using the rotation matrix.", "tier": "OPERATIONAL", "body": "The rotation matrix in Section 03 is the audit tool to re-run every May before locking the next year. NCC categorizes every series under category buckets and checks at year-end whether anything was skipped. Adding attendance, baptisms, and decision data to this matrix when available turns it from an audit into a closed-loop learning system."}];
+
+const YEAR_COLORS = {
+  '2021-2022': '#6b7a85',
+  '2022-2023': '#ad8b3a',
+  '2023-2024': '#5a6b4b',
+  '2024-2025': '#8c3220',
+  '2025-2026': '#b8462f'
+};
+
+// ============ DISTINCTIVES ============
+function buildDistinctives() {
+  document.getElementById('distinctivesGrid').innerHTML = V3.phoenix_distinctives.map(d => {
+    const isCV = d.factor.includes('CCV');
+    return `
+      <div class="distinctive-card ${isCV ? 'cv' : ''}">
+        <h3>${d.factor}</h3>
+        <div class="distinctive-data">${d.data}</div>
+        <div class="distinctive-implication">${d.implication}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============ RADAR ============
+let radarChart;
+const ENABLED_YEARS = new Set(DATA.totals.years);
+
+function buildRadar() {
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  const topics = DATA.top_radar_topics;
+  const datasets = DATA.totals.years.map(year => ({
+    label: year,
+    data: DATA.radar_data[year].map(d => d.pct),
+    fill: true,
+    backgroundColor: YEAR_COLORS[year] + '22',
+    borderColor: YEAR_COLORS[year],
+    borderWidth: 1.5,
+    pointBackgroundColor: YEAR_COLORS[year],
+    pointBorderColor: '#f4efe6',
+    pointBorderWidth: 1,
+    pointRadius: 3,
+    pointHoverRadius: 6,
+    hidden: !ENABLED_YEARS.has(year)
+  }));
+  const shortLabels = topics.map(t => t.length > 22 ? t.split(' & ')[0] : t);
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: { labels: shortLabels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a1814',
+          titleFont: { family: 'Aeonik Pro, Fraunces', size: 13 },
+          bodyFont: { family: 'Aeonik Pro, Inter Tight', size: 12 },
+          padding: 10,
+          callbacks: {
+            title: (items) => items[0].dataset.label,
+            label: (item) => `${topics[item.dataIndex]}: ${item.raw}% of sermons`
+          }
+        }
+      },
+      scales: {
+        r: {
+          beginAtZero: true, max: 30,
+          ticks: { stepSize: 10, color: '#7a7164', font: { family: 'JetBrains Mono', size: 9 }, backdropColor: 'transparent' },
+          grid: { color: '#c8bea9' },
+          angleLines: { color: '#c8bea9' },
+          pointLabels: { color: '#1a1814', font: { family: 'Aeonik Pro, Inter Tight', size: 11, weight: '500' } }
+        }
+      }
+    }
+  });
+}
+
+function buildRadarControls() {
+  const wrap = document.getElementById('radarControls');
+  wrap.innerHTML = DATA.totals.years.map(year => {
+    const total = DATA.totals.sermons_per_year[year];
+    return `<div class="yr-toggle" data-year="${year}"><span class="swatch" style="background: ${YEAR_COLORS[year]}"></span><span>${year}</span><span class="yr-pct">${total} msgs</span></div>`;
+  }).join('');
+  wrap.querySelectorAll('.yr-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const year = toggle.dataset.year;
+      if (ENABLED_YEARS.has(year)) { ENABLED_YEARS.delete(year); toggle.classList.add('off'); }
+      else { ENABLED_YEARS.add(year); toggle.classList.remove('off'); }
+      const idx = DATA.totals.years.indexOf(year);
+      radarChart.data.datasets[idx].hidden = !ENABLED_YEARS.has(year);
+      radarChart.update();
+    });
+  });
+}
+
+// ============ ROTATION MATRIX ============
+function buildMatrix() {
+  const max = Math.max(...V2.rotation_matrix.map(r => r.our_pct));
+  document.getElementById('matrixBody').innerHTML = V2.rotation_matrix.map(r => {
+    const barWidth = (r.our_pct / max * 100).toFixed(1);
+    return `
+      <div class="matrix-row">
+        <div><div class="mat-cat">${r.category}</div></div>
+        <div><span class="mat-pct">${r.our_pct}%</span></div>
+        <div><div class="mat-bar-wrap"><div class="mat-bar-track"><div class="mat-bar-fill ${r.verdict}" style="width: ${barWidth}%"></div></div></div></div>
+        <div><div class="mat-peer">${r.peer_examples}</div></div>
+        <div><div class="mat-verdict"><span class="mat-verdict-pill ${r.verdict}">${r.verdict}</span>${r.note ? `<span class="mat-note">${r.note}</span>` : ''}</div></div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============ STRENGTHS / GAPS ============
+function buildStrengthsGaps() {
+  document.getElementById('strengthsList').innerHTML = V3.mesa_vs_peers.where_mesa_is_strong.map(s => `
+    <li>
+      <strong>${s.strength}</strong>
+      <span class="context">${s.context}</span>
+      <span class="rec">→ ${s.recommendation}</span>
+    </li>
+  `).join('');
+
+  document.getElementById('gapsList').innerHTML = V3.mesa_vs_peers.where_mesa_has_gaps.map(g => {
+    const sevClass = g.severity.replace(/[^A-Z]/g, '').slice(0, 8);
+    return `
+      <li>
+        <strong>${g.gap}<span class="severity-tag ${sevClass}">${g.severity}</span></strong>
+        <span class="context">${g.context}</span>
+        <span class="rec">→ ${g.recommendation}</span>
+      </li>
+    `;
+  }).join('');
+}
+
+// ============ PEER GRID ============
+function buildPeers() {
+  document.getElementById('peerGrid').innerHTML = V3.phoenix_peers.map(p => `
+    <div class="peer-card ${p.tier === 'gravitational' ? 'gravitational' : ''}">
+      <span class="peer-badge ${p.orientation}">${p.orientation}-leaning</span>
+      <div class="peer-name">${p.name}</div>
+      <div class="peer-meta">${p.city}<br>${p.pastor}<br>${p.attendance}</div>
+      <div class="peer-signature"><strong>Signature:</strong> ${p.signature}</div>
+      <div class="peer-relevance">${p.mesa_relevance}</div>
+    </div>
+  `).join('');
+}
+
+// ============ PHOENIX CALENDAR ============
+function buildPhoenixCalendar() {
+  document.getElementById('pcalBody').innerHTML = V3.phoenix_calendar.map(row => {
+    const isGap = row.mesa_status.startsWith('GAP');
+    const statusClass = isGap ? 'gap' : 'strong';
+    return `
+      <div class="pcal-row ${isGap ? 'gap-row' : ''}">
+        <div><div class="pcal-window">${row.window}</div></div>
+        <div>
+          <div class="pcal-pattern">
+            ${row.pattern}
+            <span class="peer-ex">${row.peer_examples}</span>
+          </div>
+        </div>
+        <div><div class="pcal-weeks">${row.weeks}</div></div>
+        <div><div class="pcal-status ${statusClass}">${row.mesa_status}</div></div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============ PROPOSED CALENDAR ============
+function buildProposedCalendar() {
+  document.getElementById('proposedCalendar').innerHTML = V3_CAL.proposed_calendar_2026_27.map(row => {
+    const isNew = !!row.is_new;
+    return `
+      <div class="cal-row ${isNew ? 'proposed' : ''}">
+        <div class="cal-month"><span>${row.window}</span></div>
+        <div class="cal-content">
+          <div class="cal-series">${row.series}${isNew ? '<span class="new-pill">NEW</span>' : ''}</div>
+          <div class="cal-rationale">${row.rationale}${row.fills_gap ? `<br><span class="fills">Fills gap: ${row.fills_gap}</span>` : ''}</div>
+        </div>
+        <div class="cal-weeks">${row.weeks}<span class="lbl">wks</span></div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============ RECS ============
+function buildRecs() {
+  document.getElementById('recsList').innerHTML = V3_RECS.map(r => {
+    const tierClass = r.tier.split(' ')[0].split('/')[0];
+    const isStrategic = r.n === '01';
+    return `
+      <div class="rec-item ${isStrategic ? 'tier-strategic' : ''}">
+        <div class="rec-num-large">${r.n}</div>
+        <div class="rec-body-wrap">
+          <span class="rec-tier-tag ${tierClass}">${r.tier}</span>
+          <div class="rec-title-large">${r.title}</div>
+          <div class="rec-body-large">${r.body}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildDistinctives();
+  buildRadar();
+  buildRadarControls();
+  buildMatrix();
+  buildStrengthsGaps();
+  buildPeers();
+  buildPhoenixCalendar();
+  buildProposedCalendar();
+  buildRecs();
+});
+</script>
+</body>
+</html>
